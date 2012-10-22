@@ -37,12 +37,6 @@ class UrlService {
 	protected $rsaWalletService;
 
 	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Repository\SsoClientRepository
-	 */
-	protected $ssoClientRepository;
-
-	/**
 	 * @param array $settings
 	 * @return void
 	 */
@@ -70,34 +64,6 @@ class UrlService {
 		$url->setQuery(http_build_query($arguments));
 
 		return (string)$url;
-	}
-
-	/**
-	 *
-	 */
-	public function buildCallbackRedirectUrl() {
-
-	}
-
-	/**
-	 * @param \TYPO3\Flow\Http\Uri $uri
-	 * @param string $argumentName
-	 * @param string $signature
-	 * @param string $ssoClientIdentifier
-	 * @return boolean
-	 */
-	public function verifyLoginUrl($uri, $argumentName, $signature, $ssoClientIdentifier) {
-		$uri = clone $uri;
-		$arguments = $uri->getArguments();
-		unset($arguments['signature']);
-		$uri->setQuery(http_build_query($arguments));
-		$originalUri = (string)$uri;
-
-		$ssoClient = $this->ssoClientRepository->findByIdentifier($ssoClientIdentifier);
-		if ($ssoClient === NULL) {
-			throw new \TYPO3\Flow\Exception('Could not find client with identifier "' . $ssoClientIdentifier . '"', 1334940432);
-		}
-		return $this->rsaWalletService->verifySignature($originalUri, $signature, $ssoClient->getPublicKey());
 	}
 
 }
