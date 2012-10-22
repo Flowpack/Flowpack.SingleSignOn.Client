@@ -1,1 +1,13 @@
-{"name":"typo3\/singlesignon-client","type":"typo3-flow-package","description":"","require":{"typo3\/flow":"*"},"autoload":{"psr-0":{"TYPO3\\SingleSignOn\\Client":"Classes"}}}
+{
+	"name": "typo3\/singlesignon-client",
+	"type": "typo3-flow-package",
+	"description": "TYPO3 SingleSignOn Client",
+	"require": {
+		"typo3\/flow": "*"
+	},
+	"autoload": {
+		"psr-0": {
+			"TYPO3\\SingleSignOn\\Client": "Classes"
+		}
+	}
+}
