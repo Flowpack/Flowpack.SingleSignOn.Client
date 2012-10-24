@@ -44,6 +44,7 @@ class UrlService {
 		$this->ssoClientIdentifier = $settings['ssoClientIdentifier'];
 		$this->ssoClientKeyPairUuid = $settings['ssoClientKeyPairUuid'];
 		$this->ssoServerEndpointUrl = $settings['ssoServerEndpointUrl'];
+		$this->ssoServerPublicKeyUuid = $settings['ssoServerPublicKeyUuid'];
 	}
 
 	/**
@@ -60,10 +61,20 @@ class UrlService {
 		$url->setQuery(http_build_query($arguments));
 
 		$signature = $this->rsaWalletService->sign((string)$url, $this->ssoClientKeyPairUuid);
-		$arguments['signature'] = $signature;
+		$arguments['signature'] = base64_encode($signature);
 		$url->setQuery(http_build_query($arguments));
 
 		return (string)$url;
+	}
+
+	/**
+	 * @param $accessTokenCipher
+	 * @param $signature
+	 * @return boolean
+	 */
+	public function verifyCallbackSignature($accessTokenCipher, $signature) {
+
+		return $this->rsaWalletService->verifySignature($accessTokenCipher, $signature, $this->ssoServerPublicKeyUuid);
 	}
 
 }

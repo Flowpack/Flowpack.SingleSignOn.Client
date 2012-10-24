@@ -6,12 +6,21 @@ namespace TYPO3\SingleSignOn\Client\Security;
  *                                                                        *
  *                                                                        */
 
+use TYPO3\Flow\Annotations as Flow;
+
 /**
  * SSO token for handling SSO callbacks
  *
  * TODO Add description how that works
  */
 class SingleSignOnToken extends \TYPO3\Flow\Security\Authentication\Token\AbstractToken {
+
+	/**
+	 * The SSO credentials after callback to client
+	 * @var array
+	 * @Flow\Transient
+	 */
+	protected $credentials = array('accessToken' => '', 'signature' => '');
 
 	/**
 	 * Updates the authentication credentials, the authentication manager needs to authenticate this token.
@@ -24,10 +33,24 @@ class SingleSignOnToken extends \TYPO3\Flow\Security\Authentication\Token\Abstra
 	 * @return boolean TRUE if this token needs to be (re-)authenticated
 	 */
 	public function updateCredentials(\TYPO3\Flow\Mvc\ActionRequest $actionRequest) {
-		// TODO Check if we have a callback request
-		// TODO Get callback parameters from request
-		// TODO Verify signature with server public key
-		// TODO Decrypt and store accessToken
+		$httpRequest = $actionRequest->getHttpRequest();
+		if ($httpRequest->getMethod() !== 'GET') {
+			return;
+		}
+
+			// Check if we have a callback request
+		$arguments = $actionRequest->getInternalArguments();
+		$accessTokenCipher = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($arguments, '__typo3.singlesignon.accessToken');
+		$signature = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($arguments, '__typo3.singlesignon.signature');
+
+		if (!empty($accessTokenCipher) && !empty($signature)) {
+				// Get callback parameters from request
+			$this->credentials['accessToken'] = base64_decode($accessTokenCipher);
+			$this->credentials['signature'] = base64_decode($signature);
+			$this->setAuthenticationStatus(self::AUTHENTICATION_NEEDED);
+		} else {
+			$this->setAuthenticationStatus(self::NO_CREDENTIALS_GIVEN);
+		}
 	}
 
 }
