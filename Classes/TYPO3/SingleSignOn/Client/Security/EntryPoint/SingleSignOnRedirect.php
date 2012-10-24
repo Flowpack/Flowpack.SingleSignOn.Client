@@ -20,7 +20,10 @@ class SingleSignOnRedirect extends \TYPO3\Flow\Security\Authentication\EntryPoin
 	protected $urlService;
 
 	/**
-	 * Starts the authentication. (e.g. redirect to login page or send 401 HTTP header)
+	 * Starts the authentication by redirecting to the SSO endpoint
+	 *
+	 * The redirect includes the callback URI (the original URI from the given request)
+	 * the client identifier and a signature of the arguments with the client private key.
 	 *
 	 * @param \TYPO3\Flow\Http\Request $request The current request
 	 * @param \TYPO3\Flow\Http\Response $response The current response
