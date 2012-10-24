@@ -49,6 +49,7 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 			if (!$this->urlService->verifyCallbackSignature($accessTokenCipher, $signature)) {
 				throw new \TYPO3\Flow\Exception('Could not verify signature of access token', 1351008742);
 			}
+			$accessToken = $this->urlService->decryptCallbackAccessToken($accessTokenCipher);
 			// TODO Decrypt accessToken
 
 			// TODO Do actual SSO transfer of authentication data

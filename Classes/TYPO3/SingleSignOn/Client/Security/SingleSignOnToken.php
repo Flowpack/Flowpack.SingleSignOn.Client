@@ -39,7 +39,7 @@ class SingleSignOnToken extends \TYPO3\Flow\Security\Authentication\Token\Abstra
 		}
 
 			// Check if we have a callback request
-		$arguments = $actionRequest->getInternalArguments();
+		$arguments = $httpRequest->getArguments();
 		$accessTokenCipher = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($arguments, '__typo3.singlesignon.accessToken');
 		$signature = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($arguments, '__typo3.singlesignon.signature');
 
