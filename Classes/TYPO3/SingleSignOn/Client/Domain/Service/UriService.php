@@ -1,21 +1,19 @@
 <?php
 namespace TYPO3\SingleSignOn\Client\Domain\Service;
 
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Client".*
- *                                                                        *
- *                                                                        */
+/*                                                                            *
+ * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Client"  *
+ *                                                                            *
+ *                                                                            */
 
 use TYPO3\Flow\Annotations as Flow;
 
 /**
- * URL service for building single sign-on URLs for the client
- *
- * TODO Move some functionality to domain service
+ * URI service for building single sign-on URIs for the client
  *
  * @Flow\Scope("singleton")
  */
-class UrlService {
+class UriService {
 
 	/**
 	 * @var string
@@ -30,7 +28,7 @@ class UrlService {
 	/**
 	 * @var string
 	 */
-	protected $ssoServerEndpointUrl;
+	protected $ssoServerEndpointUri;
 
 	/**
 	 * @var string
@@ -44,6 +42,8 @@ class UrlService {
 	protected $rsaWalletService;
 
 	/**
+	 * Prepare settings
+	 *
 	 * @param array $settings
 	 * @return void
 	 */
@@ -54,21 +54,14 @@ class UrlService {
 		if (isset($settings['ssoClientKeyPairUuid'])) {
 			$this->ssoClientKeyPairUuid = $settings['ssoClientKeyPairUuid'];
 		}
-		if (isset($settings['ssoServerEndpointUrl'])) {
-			$this->ssoServerEndpointUrl = $settings['ssoServerEndpointUrl'];
+		if (isset($settings['ssoServerEndpointUri'])) {
+			$this->ssoServerEndpointUri = $settings['ssoServerEndpointUri'];
 		}
 		if (isset($settings['ssoServerPublicKeyUuid'])) {
 			$this->ssoServerPublicKeyUuid = $settings['ssoServerPublicKeyUuid'];
 		}
-	}
-
-	/**
-	 * @param string $callbackUrl
-	 * @return string
-	 */
-	public function buildLoginRedirectUrl($callbackUrl) {
-		if ((string)$this->ssoServerEndpointUrl === '') {
-			throw new \TYPO3\Flow\Configuration\Exception\InvalidConfigurationTypeException('Missing TYPO3.SingleSignOn.Client.ssoServerEndpointUrl setting', 1351075101);
+		if ((string)$this->ssoServerEndpointUri === '') {
+			throw new \TYPO3\Flow\Configuration\Exception\InvalidConfigurationTypeException('Missing TYPO3.SingleSignOn.Client.ssoServerEndpointUri setting', 1351075101);
 		}
 		if ((string)$this->ssoClientIdentifier === '') {
 			throw new \TYPO3\Flow\Configuration\Exception\InvalidConfigurationTypeException('Missing TYPO3.SingleSignOn.Client.ssoClientIdentifier setting', 1351075078);
@@ -76,23 +69,33 @@ class UrlService {
 		if ((string)$this->ssoClientKeyPairUuid === '') {
 			throw new \TYPO3\Flow\Configuration\Exception\InvalidConfigurationTypeException('Missing TYPO3.SingleSignOn.Client.ssoClientKeyPairUuid setting', 1351075159);
 		}
-
-		$url = new \TYPO3\Flow\Http\Uri($this->ssoServerEndpointUrl);
-		$arguments = array(
-			'callbackUrl' => (string)$callbackUrl,
-			'ssoClientIdentifier' => $this->ssoClientIdentifier
-		);
-		ksort($arguments);
-		$url->setQuery(http_build_query($arguments));
-
-		$signature = $this->rsaWalletService->sign((string)$url, $this->ssoClientKeyPairUuid);
-		$arguments['signature'] = base64_encode($signature);
-		$url->setQuery(http_build_query($arguments));
-
-		return (string)$url;
 	}
 
 	/**
+	 *
+	 *
+	 * @param string $callbackUri
+	 * @return string
+	 */
+	public function buildLoginRedirectUri($callbackUri) {
+		$uri = new \TYPO3\Flow\Http\Uri($this->ssoServerEndpointUri);
+		$arguments = array(
+			'callbackUri' => (string)$callbackUri,
+			'ssoClientIdentifier' => $this->ssoClientIdentifier
+		);
+		ksort($arguments);
+		$uri->setQuery(http_build_query($arguments));
+
+		$signature = $this->rsaWalletService->sign((string)$uri, $this->ssoClientKeyPairUuid);
+		$arguments['signature'] = base64_encode($signature);
+		$uri->setQuery(http_build_query($arguments));
+
+		return (string)$uri;
+	}
+
+	/**
+	 *
+	 *
 	 * @param string $accessTokenCipher
 	 * @param string $signature
 	 * @return boolean

@@ -1,0 +1,11 @@
+#
+# Default Settings for TYPO3.SingleSignOn.Client
+#
+
+TYPO3:
+  SingleSignOn:
+    Client:
+      ssoClientIdentifier: NULL
+      ssoClientKeyPairUuid: NULL
+      ssoServerEndpointUri: NULL
+      ssoServerPublicKeyUui: NULL

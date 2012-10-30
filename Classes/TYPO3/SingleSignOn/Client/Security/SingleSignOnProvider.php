@@ -17,9 +17,9 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Client\Domain\Service\UrlService
+	 * @var \TYPO3\SingleSignOn\Client\Domain\Service\UriService
 	 */
-	protected $urlService;
+	protected $uriService;
 
 	/**
 	 * Returns the classnames of the tokens this provider is responsible for.
@@ -46,10 +46,10 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 			$credentials = $authenticationToken->getCredentials();
 			$signature = $credentials['signature'];
 			$accessTokenCipher = $credentials['accessToken'];
-			if (!$this->urlService->verifyCallbackSignature($accessTokenCipher, $signature)) {
+			if (!$this->uriService->verifyCallbackSignature($accessTokenCipher, $signature)) {
 				throw new \TYPO3\Flow\Exception('Could not verify signature of access token', 1351008742);
 			}
-			$accessToken = $this->urlService->decryptCallbackAccessToken($accessTokenCipher);
+			$accessToken = $this->uriService->decryptCallbackAccessToken($accessTokenCipher);
 			// TODO Decrypt accessToken
 
 			// TODO Do actual SSO transfer of authentication data

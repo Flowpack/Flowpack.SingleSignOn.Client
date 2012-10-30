@@ -29,16 +29,16 @@ class SsoServer implements SsoInstanceInterface {
 	protected $privateKey;
 
 	/**
-	 * The SSO endpoint url
+	 * The SSO endpoint uri
 	 * @var string
 	 */
-	protected $endpointUrl;
+	protected $endpointUri;
 
 	/**
-	 * The SSO service base url
+	 * The SSO service base uri
 	 * @var string
 	 */
-	protected $serviceBaseUrl;
+	protected $serviceBaseUri;
 
 
 	/**
@@ -80,41 +80,41 @@ class SsoServer implements SsoInstanceInterface {
 	}
 
 	/**
-	 * Get the Sso server's endpoint url
+	 * Get the Sso server's endpoint uri
 	 *
-	 * @return string The Sso server's endpoint url
+	 * @return string The Sso server's endpoint uri
 	 */
-	public function getEndpointUrl() {
-		return $this->endpointUrl;
+	public function getEndpointUri() {
+		return $this->endpointUri;
 	}
 
 	/**
-	 * Sets this Sso server's endpoint url
+	 * Sets this Sso server's endpoint uri
 	 *
-	 * @param string $endpointUrl The Sso server's endpoint url
+	 * @param string $endpointUri The Sso server's endpoint uri
 	 * @return void
 	 */
-	public function setEndpointUrl($endpointUrl) {
-		$this->endpointUrl = $endpointUrl;
+	public function setEndpointUri($endpointUri) {
+		$this->endpointUri = $endpointUri;
 	}
 
 	/**
-	 * Get the Sso server's service base url
+	 * Get the Sso server's service base uri
 	 *
-	 * @return string The Sso server's service base url
+	 * @return string The Sso server's service base uri
 	 */
-	public function getServiceBaseUrl() {
-		return $this->serviceBaseUrl;
+	public function getServiceBaseUri() {
+		return $this->serviceBaseUri;
 	}
 
 	/**
-	 * Sets this Sso server's service base url
+	 * Sets this Sso server's service base uri
 	 *
-	 * @param string $serviceBaseUrl The Sso server's service base url
+	 * @param string $serviceBaseUri The Sso server's service base uri
 	 * @return void
 	 */
-	public function setServiceBaseUrl($serviceBaseUrl) {
-		$this->serviceBaseUrl = $serviceBaseUrl;
+	public function setServiceBaseUri($serviceBaseUri) {
+		$this->serviceBaseUri = $serviceBaseUri;
 	}
 
 }
