@@ -29,13 +29,13 @@ class SsoServer implements SsoInstanceInterface {
 	protected $privateKey;
 
 	/**
-	 * The SSO endpoint uri
+	 * The SSO endpoint URI
 	 * @var string
 	 */
 	protected $endpointUri;
 
 	/**
-	 * The SSO service base uri
+	 * The SSO service base URI
 	 * @var string
 	 */
 	protected $serviceBaseUri;
@@ -80,18 +80,18 @@ class SsoServer implements SsoInstanceInterface {
 	}
 
 	/**
-	 * Get the Sso server's endpoint uri
+	 * Get the Sso server's endpoint URI
 	 *
-	 * @return string The Sso server's endpoint uri
+	 * @return string The Sso server's endpoint URI
 	 */
 	public function getEndpointUri() {
 		return $this->endpointUri;
 	}
 
 	/**
-	 * Sets this Sso server's endpoint uri
+	 * Sets this Sso server's endpoint URI
 	 *
-	 * @param string $endpointUri The Sso server's endpoint uri
+	 * @param string $endpointUri The Sso server's endpoint URI
 	 * @return void
 	 */
 	public function setEndpointUri($endpointUri) {
@@ -99,18 +99,18 @@ class SsoServer implements SsoInstanceInterface {
 	}
 
 	/**
-	 * Get the Sso server's service base uri
+	 * Get the Sso server's service base URI
 	 *
-	 * @return string The Sso server's service base uri
+	 * @return string The Sso server's service base URI
 	 */
 	public function getServiceBaseUri() {
 		return $this->serviceBaseUri;
 	}
 
 	/**
-	 * Sets this Sso server's service base uri
+	 * Sets this Sso server's service base URI
 	 *
-	 * @param string $serviceBaseUri The Sso server's service base uri
+	 * @param string $serviceBaseUri The Sso server's service base URI
 	 * @return void
 	 */
 	public function setServiceBaseUri($serviceBaseUri) {
