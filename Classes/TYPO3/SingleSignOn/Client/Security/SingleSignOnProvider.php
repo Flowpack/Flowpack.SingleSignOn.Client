@@ -7,6 +7,7 @@ namespace TYPO3\SingleSignOn\Client\Security;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\SingleSignOn\Client\Exception;
 
 /**
  * A provider that uses a SSO server for authentication
@@ -17,9 +18,15 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Client\Domain\Service\UriService
+	 * @var \TYPO3\SingleSignOn\Client\Domain\Factory\SsoServerFactory
 	 */
-	protected $uriService;
+	protected $ssoServerFactory;
+
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Client\Domain\Factory\SsoClientFactory
+	 */
+	protected $ssoClientFactory;
 
 	/**
 	 * Returns the classnames of the tokens this provider is responsible for.
@@ -46,11 +53,17 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 			$credentials = $authenticationToken->getCredentials();
 			$signature = $credentials['signature'];
 			$accessTokenCipher = $credentials['accessToken'];
-			if (!$this->uriService->verifyCallbackSignature($accessTokenCipher, $signature)) {
-				throw new \TYPO3\Flow\Exception('Could not verify signature of access token', 1351008742);
+
+			$ssoServer = $this->createSsoServer();
+			if (!$ssoServer->verifyCallbackSignature($accessTokenCipher, $signature)) {
+				throw new Exception('Could not verify signature of access token', 1351008742);
 			}
-			$accessToken = $this->uriService->decryptCallbackAccessToken($accessTokenCipher);
-			// TODO Decrypt accessToken
+
+			$ssoClient = $this->ssoClientFactory->create();
+			$accessToken = $ssoClient->decryptCallbackAccessToken($accessTokenCipher);
+			if ($accessToken === '') {
+				throw new Exception('Could not decrypt access token', 1351690950);
+			}
 
 			// TODO Do actual SSO transfer of authentication data
 			// TODO Set external session id on token
@@ -66,6 +79,19 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 		} elseif ($authenticationToken->getAuthenticationStatus() !== \TYPO3\Flow\Security\Authentication\TokenInterface::AUTHENTICATION_SUCCESSFUL) {
 			$authenticationToken->setAuthenticationStatus(\TYPO3\Flow\Security\Authentication\TokenInterface::NO_CREDENTIALS_GIVEN);
 		}
+	}
+
+	/**
+	 * Create an SSO server instance from the provider options
+	 *
+	 * @return \TYPO3\SingleSignOn\Client\Domain\Model\SsoServer
+	 */
+	protected function createSsoServer() {
+		if (!isset($this->options['server'])) {
+			throw new Exception('Missing "server" option for SingleSignOnProvider authentication provider "' . $this->name . '". Please specifiy one using the providerOptions setting.', 1351690847);
+		}
+		$ssoServer = $this->ssoServerFactory->create($this->options['server']);
+		return $ssoServer;
 	}
 }
 

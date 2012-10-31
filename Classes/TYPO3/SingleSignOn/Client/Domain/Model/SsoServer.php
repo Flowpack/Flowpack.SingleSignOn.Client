@@ -8,13 +8,14 @@ namespace TYPO3\SingleSignOn\Client\Domain\Model;
 
 use TYPO3\Flow\Annotations as Flow;
 use Doctrine\ORM\Mapping as ORM;
+use \TYPO3\Flow\Http\Uri;
 
 /**
  * SSO server
  *
  * Will be configured using settings.
  */
-class SsoServer implements SsoInstanceInterface {
+class SsoServer {
 
 	/**
 	 * The public key
@@ -23,23 +24,56 @@ class SsoServer implements SsoInstanceInterface {
 	protected $publicKey;
 
 	/**
-	 * The private key
-	 * @var string
-	 */
-	protected $privateKey;
-
-	/**
-	 * The SSO endpoint URI
+	 * The SSO server endpoint URI
 	 * @var string
 	 */
 	protected $endpointUri;
 
 	/**
-	 * The SSO service base URI
+	 * The SSO server service base URI
 	 * @var string
 	 */
 	protected $serviceBaseUri;
 
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface
+	 */
+	protected $rsaWalletService;
+
+	/**
+	 * Build a URI to redirect to the server authentication endpoint
+	 *
+	 * @param \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient $ssoClient The SSO client that wants to authenticate against the server
+	 * @param string $callbackUri A URI where the server should redirect back after successful authentication on the server
+	 * @return string The URI for the redirect
+	 */
+	public function buildAuthenticationEndpointUri(SsoClient $ssoClient, $callbackUri) {
+		$uri = new Uri($this->endpointUri);
+		$arguments = array(
+			'callbackUri' => (string)$callbackUri,
+			'ssoClientIdentifier' => $ssoClient->getIdentifier()
+		);
+		ksort($arguments);
+		$uri->setQuery(http_build_query($arguments));
+
+		$signature = $this->rsaWalletService->sign((string)$uri, $ssoClient->getKeyPairUuid());
+		$arguments['signature'] = base64_encode($signature);
+		$uri->setQuery(http_build_query($arguments));
+
+		return (string)$uri;
+	}
+
+	/**
+	 *
+	 *
+	 * @param string $accessTokenCipher
+	 * @param string $signature
+	 * @return boolean
+	 */
+	public function verifyCallbackSignature($accessTokenCipher, $signature) {
+		return $this->rsaWalletService->verifySignature($accessTokenCipher, $signature, $this->publicKey);
+	}
 
 	/**
 	 * Get the Sso server's public key
@@ -58,25 +92,6 @@ class SsoServer implements SsoInstanceInterface {
 	 */
 	public function setPublicKey($publicKey) {
 		$this->publicKey = $publicKey;
-	}
-
-	/**
-	 * Get the Sso server's private key
-	 *
-	 * @return string The Sso server's private key
-	 */
-	public function getPrivateKey() {
-		return $this->privateKey;
-	}
-
-	/**
-	 * Sets this Sso server's private key
-	 *
-	 * @param string $privateKey The Sso server's private key
-	 * @return void
-	 */
-	public function setPrivateKey($privateKey) {
-		$this->privateKey = $privateKey;
 	}
 
 	/**

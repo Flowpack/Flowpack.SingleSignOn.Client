@@ -5,7 +5,32 @@
 TYPO3:
   SingleSignOn:
     Client:
-      ssoClientIdentifier: NULL
-      ssoClientKeyPairUuid: NULL
-      ssoServerEndpointUri: NULL
-      ssoServerPublicKeyUui: NULL
+      # SSO client configuration
+      client:
+        # The client identifier, should be short and unique identifier for this instance
+        identifier: ''
+        # The client key pair fingerprint
+        keyPairUuid: ''
+
+      # A list of named SSO server configurations
+      server:
+        # Example server configuration
+        #
+        #   DemoServer:
+        #     publicKeyUuid: 'bb5abb57faa122cc031e3c904db3d751'
+        #     endpointUri: 'http://ssoserver/sso/authentication'
+
+# Example configuration for a SSO entry point
+#
+#   TYPO3:
+#     Flow:
+#       security:
+#         authentication:
+#           providers:
+#             SingleSignOnProvider:
+#               provider: 'TYPO3\SingleSignOn\Client\Security\SingleSignOnProvider'
+#               providerOptions:
+#                 server: DemoServer
+#               entryPoint: 'TYPO3\SingleSignOn\Client\Security\EntryPoint\SingleSignOnRedirect'
+#               entryPointOptions:
+#                 server: DemoServer
