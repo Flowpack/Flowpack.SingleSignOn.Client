@@ -48,14 +48,21 @@ class SsoServerFactory {
 		}
 		$serverConfiguration = $this->serverConfigurations[$serverIdentifier];
 		$ssoServer = new \TYPO3\SingleSignOn\Client\Domain\Model\SsoServer();
-		if (!isset($serverConfiguration['endpointUri']) || (string)$serverConfiguration['endpointUri'] === '') {
-			throw new Exception('Missing endpointUri setting for "' . $serverIdentifier . '"', 1351688412);
+		if (!isset($serverConfiguration['serviceBaseUri']) || (string)$serverConfiguration['serviceBaseUri'] === '') {
+			throw new Exception('Missing serviceBaseUri setting in TYPO3.SingleSignOn.Client.server.' . $serverIdentifier, 1352719244);
 		}
-		$ssoServer->setEndpointUri($serverConfiguration['endpointUri']);
+		$serverConfiguration['serviceBaseUri'] = rtrim($serverConfiguration['serviceBaseUri'], '/');
+		$ssoServer->setServiceBaseUri($serverConfiguration['serviceBaseUri']);
+		$ssoServer->setEndpointUri($serverConfiguration['serviceBaseUri'] . '/authentication');
+
 		if (!isset($serverConfiguration['publicKeyUuid']) || (string)$serverConfiguration['publicKeyUuid'] === '') {
-			throw new Exception('Missing publicKeyUuid setting for "' . $serverIdentifier . '"', 1351688420);
+			throw new Exception('Missing publicKeyUuid setting for TYPO3.SingleSignOn.Client.server.' . $serverIdentifier, 1351688420);
 		}
 		$ssoServer->setPublicKey($serverConfiguration['publicKeyUuid']);
+		if (!isset($serverConfiguration['publicKeyUuid']) || (string)$serverConfiguration['publicKeyUuid'] === '') {
+			throw new Exception('Missing publicKeyUuid setting for TYPO3.SingleSignOn.Client.server.' . $serverIdentifier, 1351688420);
+		}
+
 		// TODO Set service base URI
 		return $ssoServer;
 	}

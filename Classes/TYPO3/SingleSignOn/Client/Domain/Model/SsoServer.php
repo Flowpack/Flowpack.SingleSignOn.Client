@@ -9,6 +9,7 @@ namespace TYPO3\SingleSignOn\Client\Domain\Model;
 use TYPO3\Flow\Annotations as Flow;
 use Doctrine\ORM\Mapping as ORM;
 use \TYPO3\Flow\Http\Uri;
+use \TYPO3\SingleSignOn\Client\Exception;
 
 /**
  * SSO server
@@ -42,6 +43,12 @@ class SsoServer {
 	protected $rsaWalletService;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Http\Client\CurlEngine
+	 */
+	protected $requestEngine;
+
+	/**
 	 * Build a URI to redirect to the server authentication endpoint
 	 *
 	 * @param \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient $ssoClient The SSO client that wants to authenticate against the server
@@ -65,7 +72,7 @@ class SsoServer {
 	}
 
 	/**
-	 *
+	 * Verify the signature of a callback redirect to the client
 	 *
 	 * @param string $accessTokenCipher
 	 * @param string $signature
@@ -73,6 +80,35 @@ class SsoServer {
 	 */
 	public function verifyCallbackSignature($accessTokenCipher, $signature) {
 		return $this->rsaWalletService->verifySignature($accessTokenCipher, $signature, $this->publicKey);
+	}
+
+	/**
+	 * @param \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient $ssoClient
+	 * @param string $accessToken
+	 * @return array
+	 */
+	public function redeemAccessToken(\TYPO3\SingleSignOn\Client\Domain\Model\SsoClient $ssoClient, $accessToken) {
+		$serviceUri = $this->serviceBaseUri . '/redeem/' . urlencode($accessToken);
+		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'DELETE');
+		$request->setHeader('Accept', 'application/json');
+
+		$response = $this->requestEngine->sendRequest($request);
+		if ($response->getStatusCode() !== 200) {
+			throw new Exception('Unexpected status code for redeem access token when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1352754575);
+		}
+
+		if ($response->getHeader('Content-Type') !== 'application/json') {
+			throw new Exception('Unexpected content type for redeem access token when calling "' . (string)$serviceUri . '": "' . $response->getHeader('Content-Type') . '", expected "application/json"', 1352994795);
+		}
+
+		$authenticationData = json_decode($response, TRUE);
+		if ($authenticationData === NULL) {
+			throw new Exception('Could not decode JSON response: Error ' . json_last_error(), 1352994936);
+		}
+
+		// TODO Validate content of authentication data
+
+		return $authenticationData;
 	}
 
 	/**

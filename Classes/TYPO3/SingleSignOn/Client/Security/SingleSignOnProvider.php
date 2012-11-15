@@ -29,6 +29,12 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 	protected $ssoClientFactory;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Client\Service\GlobalAccountMapperInterface
+	 */
+	protected $globalAccountMapper;
+
+	/**
 	 * Returns the classnames of the tokens this provider is responsible for.
 	 *
 	 * @return array The classname of the token this provider is responsible for
@@ -65,14 +71,10 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 				throw new Exception('Could not decrypt access token', 1351690950);
 			}
 
-			// TODO Do actual SSO transfer of authentication data
-			// TODO Set external session id on token
+			$authenticationData = $ssoServer->redeemAccessToken($ssoClient, $accessToken);
+			$account = $this->globalAccountMapper->getAccount($ssoClient, $authenticationData['account']);
 
-			// TODO Get / create correct account
-			$account = new \TYPO3\Flow\Security\Account();
-			$account->setAccountIdentifier('test');
-			$account->setAuthenticationProviderName('SingleSignOn');
-			$account->setRoles(array('Administrator'));
+			$authenticationToken->setGlobalSessionId($authenticationData['sessionId']);
 			$authenticationToken->setAccount($account);
 
 			$authenticationToken->setAuthenticationStatus(\TYPO3\Flow\Security\Authentication\TokenInterface::AUTHENTICATION_SUCCESSFUL);
@@ -93,6 +95,6 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 		$ssoServer = $this->ssoServerFactory->create($this->options['server']);
 		return $ssoServer;
 	}
-}
 
+}
 ?>
