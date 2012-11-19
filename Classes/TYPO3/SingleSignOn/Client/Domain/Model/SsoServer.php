@@ -88,12 +88,12 @@ class SsoServer {
 	 * @return array
 	 */
 	public function redeemAccessToken(\TYPO3\SingleSignOn\Client\Domain\Model\SsoClient $ssoClient, $accessToken) {
-		$serviceUri = $this->serviceBaseUri . '/redeem/' . urlencode($accessToken);
-		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'DELETE');
+		$serviceUri = $this->serviceBaseUri . '/token/' . urlencode($accessToken) . '/redeem';
+		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'POST');
 		$request->setHeader('Accept', 'application/json');
 
 		$response = $this->requestEngine->sendRequest($request);
-		if ($response->getStatusCode() !== 200) {
+		if ($response->getStatusCode() !== 201) {
 			throw new Exception('Unexpected status code for redeem access token when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1352754575);
 		}
 
