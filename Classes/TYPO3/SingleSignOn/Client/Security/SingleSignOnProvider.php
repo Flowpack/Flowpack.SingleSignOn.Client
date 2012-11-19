@@ -48,6 +48,7 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 	 *
 	 * @param \TYPO3\Flow\Security\Authentication\TokenInterface $authenticationToken The token to be authenticated
 	 * @return void
+	 * @Flow\Session(autoStart=true)
 	 */
 	public function authenticate(\TYPO3\Flow\Security\Authentication\TokenInterface $authenticationToken) {
 		if (!$authenticationToken instanceof SingleSignOnToken) {
