@@ -66,8 +66,6 @@ class SingleSignOnToken extends \TYPO3\Flow\Security\Authentication\Token\Abstra
 			$this->callbackUri->setQuery(http_build_query($arguments));
 
 			$this->setAuthenticationStatus(self::AUTHENTICATION_NEEDED);
-		} else {
-			$this->setAuthenticationStatus(self::NO_CREDENTIALS_GIVEN);
 		}
 	}
 
