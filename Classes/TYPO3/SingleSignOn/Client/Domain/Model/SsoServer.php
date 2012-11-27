@@ -9,7 +9,9 @@ namespace TYPO3\SingleSignOn\Client\Domain\Model;
 use TYPO3\Flow\Annotations as Flow;
 use Doctrine\ORM\Mapping as ORM;
 use \TYPO3\Flow\Http\Uri;
+
 use \TYPO3\SingleSignOn\Client\Exception;
+use \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient;
 
 /**
  * SSO server
@@ -87,7 +89,7 @@ class SsoServer {
 	 * @param string $accessToken
 	 * @return array
 	 */
-	public function redeemAccessToken(\TYPO3\SingleSignOn\Client\Domain\Model\SsoClient $ssoClient, $accessToken) {
+	public function redeemAccessToken(SsoClient $ssoClient, $accessToken) {
 		$serviceUri = $this->serviceBaseUri . '/token/' . urlencode($accessToken) . '/redeem';
 		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'POST');
 		$request->setHeader('Accept', 'application/json');
@@ -101,7 +103,7 @@ class SsoServer {
 			throw new Exception('Unexpected content type for redeem access token when calling "' . (string)$serviceUri . '": "' . $response->getHeader('Content-Type') . '", expected "application/json"', 1352994795);
 		}
 
-		$authenticationData = json_decode($response, TRUE);
+		$authenticationData = json_decode($response->getContent(), TRUE);
 		if ($authenticationData === NULL) {
 			throw new Exception('Could not decode JSON response: Error ' . json_last_error(), 1352994936);
 		}
@@ -109,6 +111,27 @@ class SsoServer {
 		// TODO Validate content of authentication data
 
 		return $authenticationData;
+	}
+
+	/**
+	 * Touch a global session
+	 *
+	 * This method is thought to work asynchronously to not block when the
+	 * server is responding slow.
+	 *
+	 * @param \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient $ssoClient
+	 * @param string $sessionId
+	 * @return void
+	 */
+	public function touchSession(SsoClient $ssoClient, $sessionId) {
+		$serviceUri = $this->serviceBaseUri . '/session/' . urlencode($sessionId) . '/touch';
+		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'POST');
+
+		// TODO Send request asynchronously
+		$response = $this->requestEngine->sendRequest($request);
+		if ($response->getStatusCode() !== 200) {
+			throw new Exception('Unexpected status code for redeem access token when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1354030063);
+		}
 	}
 
 	/**

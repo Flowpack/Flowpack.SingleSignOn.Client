@@ -29,10 +29,22 @@ class SingleSignOnToken extends \TYPO3\Flow\Security\Authentication\Token\Abstra
 	protected $callbackUri;
 
 	/**
+	 * @var string
+	 * @Flow\Transient
+	 */
+	protected $serverName;
+
+	/**
 	 * The global session id when authenticated through the SSO server
 	 * @var string
 	 */
 	protected $globalSessionId;
+
+	/**
+	 * The time of the last touch of the global session
+	 * @var integer
+	 */
+	protected $lastTouchTimestamp = 0;
 
 	/**
 	 * Updates the authentication credentials, the authentication manager needs to authenticate this token.
@@ -88,6 +100,20 @@ class SingleSignOnToken extends \TYPO3\Flow\Security\Authentication\Token\Abstra
 	 */
 	public function getGlobalSessionId() {
 		return $this->globalSessionId;
+	}
+
+	/**
+	 * @param int $lastTouchTimestamp
+	 */
+	public function setLastTouchTimestamp($lastTouchTimestamp) {
+		$this->lastTouchTimestamp = $lastTouchTimestamp;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getLastTouchTimestamp() {
+		return $this->lastTouchTimestamp;
 	}
 
 }

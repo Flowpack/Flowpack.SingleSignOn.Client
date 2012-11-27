@@ -35,6 +35,28 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 	protected $globalAccountMapper;
 
 	/**
+	 * @var string
+	 */
+	protected $globalSessionTouchGracePeriod = 60;
+
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Log\SecurityLoggerInterface
+	 */
+	protected $securityLogger;
+
+	/**
+	 * @param string $name
+	 * @param array $options
+	 */
+	public function __construct($name, array $options = array()) {
+		parent::__construct($name, $options);
+		if (isset($options['globalSessionTouchGracePeriod'])) {
+			$this->globalSessionTouchGracePeriod = (integer)$options['globalSessionTouchGracePeriod'];
+		}
+	}
+
+	/**
 	 * Returns the classnames of the tokens this provider is responsible for.
 	 *
 	 * @return array The classname of the token this provider is responsible for
@@ -81,6 +103,44 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 			$authenticationToken->setAuthenticationStatus(\TYPO3\Flow\Security\Authentication\TokenInterface::AUTHENTICATION_SUCCESSFUL);
 		} elseif ($authenticationToken->getAuthenticationStatus() !== \TYPO3\Flow\Security\Authentication\TokenInterface::AUTHENTICATION_SUCCESSFUL) {
 			$authenticationToken->setAuthenticationStatus(\TYPO3\Flow\Security\Authentication\TokenInterface::NO_CREDENTIALS_GIVEN);
+		}
+	}
+
+	/**
+	 * This method is overridden to touch the global session if needed
+	 *
+	 * The method canAuthenticate will be called by the AuthenticationProviderManager on every
+	 * request that calls authenticate (which is done through the PolicyEnforcement interceptor),
+	 * so we can touch the global session regularly.
+	 *
+	 * @param \TYPO3\Flow\Security\Authentication\TokenInterface $authenticationToken
+	 * @return boolean
+	 */
+	public function canAuthenticate(\TYPO3\Flow\Security\Authentication\TokenInterface $authenticationToken) {
+		$canAuthenticate = parent::canAuthenticate($authenticationToken);
+		if ($canAuthenticate && $authenticationToken->isAuthenticated()) {
+			$this->touchSessionIfNeeded($authenticationToken);
+		}
+		return $canAuthenticate;
+	}
+
+	/**
+	 * Touches the global session on the server to synchronize expiration between
+	 * clients and the server
+	 *
+	 * This is only done after a configurable grace period to limit the number of calls.
+	 *
+	 * @param \TYPO3\SingleSignOn\Client\Security\SingleSignOnToken $token
+	 * @return void
+	 */
+	protected function touchSessionIfNeeded(SingleSignOnToken $token) {
+		$currentTime = time();
+		if ($currentTime - $token->getLastTouchTimestamp() > $this->globalSessionTouchGracePeriod) {
+			$this->securityLogger->log('Touching global session', LOG_DEBUG);
+			$ssoClient = $this->ssoClientFactory->create();
+			$ssoServer = $this->createSsoServer();
+			$ssoServer->touchSession($ssoClient, $token->getGlobalSessionId());
+			$token->setLastTouchTimestamp(time());
 		}
 	}
 
