@@ -68,6 +68,29 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	}
 
 	/**
+	 * @test
+	 */
+	public function destroySessionCallsServerSessionRestService() {
+		$ssoServer = new \TYPO3\SingleSignOn\Client\Domain\Model\SsoServer();
+		$ssoServer->setServiceBaseUri('http://ssodemoserver/test/sso');
+
+		$mockRequestEngine = m::mock('TYPO3\Flow\Http\Client\RequestEngineInterface');
+		$this->inject($ssoServer, 'requestEngine', $mockRequestEngine);
+
+		$mockRequestEngine->shouldReceive('sendRequest')->with(m::on(function($request) use (&$lastRequest) {
+			$lastRequest = $request;
+			return TRUE;
+		}))->once()->andReturn(m::mock('TYPO3\Flow\Http\Response', array(
+			'getStatusCode' => 200
+		)));
+
+		$ssoServer->destroySession('test-session-id');
+
+		$this->assertEquals('http://ssodemoserver/test/sso/session/test-session-id/destroy', (string)$lastRequest->getUri());
+		$this->assertEquals('DELETE', $lastRequest->getMethod());
+	}
+
+	/**
 	 * Check for Mockery expectations
 	 */
 	public function tearDown() {

@@ -130,7 +130,24 @@ class SsoServer {
 		// TODO Send request asynchronously
 		$response = $this->requestEngine->sendRequest($request);
 		if ($response->getStatusCode() !== 200) {
-			throw new Exception('Unexpected status code for redeem access token when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1354030063);
+			throw new Exception('Unexpected status code for touch session when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1354030063);
+		}
+	}
+
+	/**
+	 * Destroy the given global session
+	 *
+	 * @param $sessionId
+	 * @return void
+	 */
+	public function destroySession($sessionId) {
+		$serviceUri = $this->serviceBaseUri . '/session/' . urlencode($sessionId) . '/destroy';
+		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'DELETE');
+
+		// TODO Send request asynchronously
+		$response = $this->requestEngine->sendRequest($request);
+		if ($response->getStatusCode() !== 200) {
+			throw new Exception('Unexpected status code for destroy session when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1354132939);
 		}
 	}
 
