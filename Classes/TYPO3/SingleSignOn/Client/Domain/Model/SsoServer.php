@@ -51,6 +51,12 @@ class SsoServer {
 	protected $requestEngine;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Client\Security\RequestSigner
+	 */
+	protected $requestSigner;
+
+	/**
 	 * Build a URI to redirect to the server authentication endpoint
 	 *
 	 * @param \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient $ssoClient The SSO client that wants to authenticate against the server
@@ -94,7 +100,9 @@ class SsoServer {
 		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'POST');
 		$request->setHeader('Accept', 'application/json');
 
-		$response = $this->requestEngine->sendRequest($request);
+		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getKeyPairUuid(), $ssoClient->getKeyPairUuid());
+
+		$response = $this->requestEngine->sendRequest($signedRequest);
 		if ($response->getStatusCode() !== 201) {
 			throw new Exception('Unexpected status code for redeem access token when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1352754575);
 		}

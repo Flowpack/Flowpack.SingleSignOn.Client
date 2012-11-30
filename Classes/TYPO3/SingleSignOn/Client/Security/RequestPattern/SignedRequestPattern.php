@@ -26,14 +26,20 @@ class SignedRequestPattern implements \TYPO3\Flow\Security\RequestPatternInterfa
 	protected $objectManager;
 
 	/**
-	 * @var array
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Client\Security\RequestSigner
 	 */
-	protected $patternConfiguration;
+	protected $requestSigner;
 
 	/**
 	 * @var \TYPO3\SingleSignOn\Client\Security\PublicKeyResolverInterface
 	 */
 	protected $publicKeyResolver;
+
+	/**
+	 * @var array
+	 */
+	protected $patternConfiguration;
 
 	/**
 	 * Returns the pattern configuration
@@ -77,7 +83,7 @@ class SignedRequestPattern implements \TYPO3\Flow\Security\RequestPatternInterfa
 			$identifier = $identifierAndSignature[0];
 			$signature = base64_decode($identifierAndSignature[1]);
 
-			$signData = $this->getSignData($httpRequest);
+			$signData = $this->requestSigner->getSignatureContent($httpRequest);
 
 			$publicKeyFingerprint = $this->publicKeyResolver->resolveFingerprintByIdentifier($identifier);
 			if ($publicKeyFingerprint === NULL) {
@@ -90,18 +96,6 @@ class SignedRequestPattern implements \TYPO3\Flow\Security\RequestPatternInterfa
 		}
 
 		return TRUE;
-	}
-
-	/**
-	 * @param $httpRequest
-	 * @return string
-	 */
-	protected function getSignData($httpRequest) {
-		$signData = $httpRequest->getMethod() . chr(10)
-			. $httpRequest->getContent() . chr(10)
-			. $httpRequest->getHeader('Content-Type') . chr(10)
-			. $httpRequest->getUri();
-		return $signData;
 	}
 
 }

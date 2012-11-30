@@ -48,7 +48,13 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockRequestEngine = m::mock('TYPO3\Flow\Http\Client\RequestEngineInterface');
 		$this->inject($ssoServer, 'requestEngine', $mockRequestEngine);
 
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient');
+		$mockRequestSigner = m::mock('TYPO3\SingleSignOn\Client\Security\RequestSigner');
+		$this->inject($ssoServer, 'requestSigner', $mockRequestSigner);
+		$mockRequestSigner->shouldReceive('signRequest')->andReturnUsing(function ($request) { return $request; });
+
+		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient', array(
+			'getKeyPairUuid' => 'ClientKeyPairFingerprint'
+		));
 
 		$mockResponse = m::mock('TYPO3\Flow\Http\Response', array(
 			'getStatusCode' => 201,
