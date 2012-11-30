@@ -23,6 +23,12 @@ class SingleSignOnManager {
 
 	/**
 	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Client\Domain\Factory\SsoClientFactory
+	 */
+	protected $ssoClientFactory;
+
+	/**
+	 * @Flow\Inject
 	 * @var \TYPO3\Flow\Security\Context
 	 */
 	protected $securityContext;
@@ -49,8 +55,9 @@ class SingleSignOnManager {
 			$providerName = $token->getAuthenticationProviderName();
 			$serverIdentifier = \TYPO3\Flow\Utility\Arrays::getValueByPath($allConfiguration, 'security.authentication.providers.' . $providerName . '.providerOptions.server');
 			if ($serverIdentifier !== NULL) {
+				$ssoClient = $this->ssoClientFactory->create();
 				$ssoServer = $this->ssoServerFactory->create($serverIdentifier);
-				$ssoServer->destroySession($token->getGlobalSessionId());
+				$ssoServer->destroySession($ssoClient, $token->getGlobalSessionId());
 			}
 		}
 	}

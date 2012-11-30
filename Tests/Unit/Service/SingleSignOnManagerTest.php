@@ -19,6 +19,8 @@ class SingleSignOnManagerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	public function logoutCallsDestroySessionForSsoServersFromTokens() {
 		$manager = new \TYPO3\SingleSignOn\Client\Service\SingleSignOnManager();
 
+		$mockSsoClientFactory = m::mock('TYPO3\SingleSignOn\Client\Domain\Factory\SsoClientFactory');
+		$this->inject($manager, 'ssoClientFactory', $mockSsoClientFactory);
 		$mockSsoServerFactory = m::mock('TYPO3\SingleSignOn\Client\Domain\Factory\SsoServerFactory');
 		$this->inject($manager, 'ssoServerFactory', $mockSsoServerFactory);
 		$mockConfigurationManager = m::mock('TYPO3\Flow\Configuration\ConfigurationManager');
@@ -54,7 +56,10 @@ class SingleSignOnManagerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockSsoServer = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoServer');
 		$mockSsoServerFactory->shouldReceive('create')->with('TestServer')->andReturn($mockSsoServer);
 
-		$mockSsoServer->shouldReceive('destroySession')->with('test-session-id')->once();
+		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient');
+		$mockSsoClientFactory->shouldReceive('create')->andReturn($mockSsoClient);
+
+		$mockSsoServer->shouldReceive('destroySession')->with($mockSsoClient, 'test-session-id')->once();
 
 		$manager->logout();
 

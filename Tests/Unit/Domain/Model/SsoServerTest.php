@@ -23,7 +23,13 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockRequestEngine = m::mock('TYPO3\Flow\Http\Client\RequestEngineInterface');
 		$this->inject($ssoServer, 'requestEngine', $mockRequestEngine);
 
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient');
+		$mockRequestSigner = m::mock('TYPO3\SingleSignOn\Client\Security\RequestSigner');
+		$this->inject($ssoServer, 'requestSigner', $mockRequestSigner);
+		$mockRequestSigner->shouldReceive('signRequest')->andReturnUsing(function ($request) { return $request; });
+
+		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient', array(
+			'getKeyPairUuid' => 'ClientKeyPairFingerprint'
+		));
 
 		$mockRequestEngine->shouldReceive('sendRequest')->with(m::on(function($request) use (&$lastRequest) {
 			$lastRequest = $request;
@@ -83,6 +89,10 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockRequestEngine = m::mock('TYPO3\Flow\Http\Client\RequestEngineInterface');
 		$this->inject($ssoServer, 'requestEngine', $mockRequestEngine);
 
+		$mockRequestSigner = m::mock('TYPO3\SingleSignOn\Client\Security\RequestSigner');
+		$this->inject($ssoServer, 'requestSigner', $mockRequestSigner);
+		$mockRequestSigner->shouldReceive('signRequest')->andReturnUsing(function ($request) { return $request; });
+
 		$mockRequestEngine->shouldReceive('sendRequest')->with(m::on(function($request) use (&$lastRequest) {
 			$lastRequest = $request;
 			return TRUE;
@@ -90,7 +100,11 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			'getStatusCode' => 200
 		)));
 
-		$ssoServer->destroySession('test-session-id');
+		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient', array(
+			'getKeyPairUuid' => 'ClientKeyPairFingerprint'
+		));
+
+		$ssoServer->destroySession($mockSsoClient, 'test-session-id');
 
 		$this->assertEquals('http://ssodemoserver/test/sso/session/test-session-id/destroy', (string)$lastRequest->getUri());
 		$this->assertEquals('DELETE', $lastRequest->getMethod());

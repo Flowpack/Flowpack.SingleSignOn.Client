@@ -147,15 +147,18 @@ class SsoServer {
 	/**
 	 * Destroy the given global session
 	 *
+	 * @param \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient $ssoClient
 	 * @param $sessionId
 	 * @return void
 	 */
-	public function destroySession($sessionId) {
+	public function destroySession(SsoClient $ssoClient, $sessionId) {
 		$serviceUri = $this->serviceBaseUri . '/session/' . urlencode($sessionId) . '/destroy';
 		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'DELETE');
 
+		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getKeyPairUuid(), $ssoClient->getKeyPairUuid());
+
 		// TODO Send request asynchronously
-		$response = $this->requestEngine->sendRequest($request);
+		$response = $this->requestEngine->sendRequest($signedRequest);
 		if ($response->getStatusCode() !== 200) {
 			throw new Exception('Unexpected status code for destroy session when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1354132939);
 		}
