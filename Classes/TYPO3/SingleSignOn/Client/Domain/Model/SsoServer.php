@@ -135,8 +135,10 @@ class SsoServer {
 		$serviceUri = $this->serviceBaseUri . '/session/' . urlencode($sessionId) . '/touch';
 		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'POST');
 
+		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getKeyPairUuid(), $ssoClient->getKeyPairUuid());
+
 		// TODO Send request asynchronously
-		$response = $this->requestEngine->sendRequest($request);
+		$response = $this->requestEngine->sendRequest($signedRequest);
 		if ($response->getStatusCode() !== 200) {
 			throw new Exception('Unexpected status code for touch session when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1354030063);
 		}
