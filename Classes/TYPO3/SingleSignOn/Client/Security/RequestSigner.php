@@ -26,25 +26,27 @@ class RequestSigner {
 	 * @return \TYPO3\Flow\Http\Request
 	 */
 	public function signRequest(\TYPO3\Flow\Http\Request $request, $identifier, $keyPairFingerprint) {
-		$signData = $this->getSignatureContent($request);
-		$signature = $this->rsaWalletService->sign($signData, $keyPairFingerprint);
 		$signedRequest = clone $request;
+		$signedRequest->setHeader('Date', gmdate(DATE_RFC1123));
+		$signData = $this->getSignatureContent($signedRequest);
+		$signature = $this->rsaWalletService->sign($signData, $keyPairFingerprint);
 		$signedRequest->setHeader('X-Request-Signature', $identifier . ':' . base64_encode($signature));
-		$signedRequest->setHeader('Date', gmdate('D, d M Y H:i:s') . ' GMT');
 		return $signedRequest;
 	}
 
 	/**
 	 * Get the content for the signature from the given request
 	 *
-	 * @param $httpRequest
+	 * @param \TYPO3\Flow\Http\Request $httpRequest
 	 * @return string
 	 */
-	public function getSignatureContent($httpRequest) {
+	public function getSignatureContent(\TYPO3\Flow\Http\Request $httpRequest) {
+		$date = $httpRequest->getHeader('Date');
+		$dateValue = $date instanceof \DateTime ? $date->format(DATE_RFC1123) : '';
 		$signData = $httpRequest->getMethod() . chr(10)
 			. sha1($httpRequest->getContent()) . chr(10)
 			. $httpRequest->getHeader('Content-Type') . chr(10)
-			. $httpRequest->getHeader('Date') . chr(10)
+			. $dateValue . chr(10)
 			. $httpRequest->getUri();
 		return $signData;
 	}

@@ -59,9 +59,9 @@ class SignedRequestPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockHttpRequest->shouldReceive('hasHeader')->with('X-Request-Signature')->andReturn(TRUE);
 		$mockHttpRequest->shouldReceive('getHeader')->with('X-Request-Signature')->andReturn('SomeIdentifier' . ':' . base64_encode('ValidSignature'));
 		$mockHttpRequest->shouldReceive('getHeader')->with('Content-Type')->andReturn('application/json');
-		$mockHttpRequest->shouldReceive('getHeader')->with('Date')->andReturn('Fri, 30 Nov 2012 16:37:05 GMT');
+		$mockHttpRequest->shouldReceive('getHeader')->with('Date')->andReturn(new \DateTime('Fri, 30 Nov 2012 16:37:05 +0000'));
 
-		$signData = 'POST' . chr(10) . 'fb7dc677c72c08388ac26aa5b3b8bf37f74b4a0b' . chr(10) . 'application/json' . chr(10) . 'Fri, 30 Nov 2012 16:37:05 GMT' . chr(10) . 'http://test/sso?foo=bar';
+		$signData = 'POST' . chr(10) . 'fb7dc677c72c08388ac26aa5b3b8bf37f74b4a0b' . chr(10) . 'application/json' . chr(10) . 'Fri, 30 Nov 2012 16:37:05 +0000' . chr(10) . 'http://test/sso?foo=bar';
 		$mockRsaWalletService
 			->shouldReceive('verifySignature')
 			->with($signData, 'ValidSignature', 'PublicKeyFingerprint')
@@ -100,7 +100,7 @@ class SignedRequestPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockHttpRequest->shouldReceive('hasHeader')->with('X-Request-Signature')->andReturn(TRUE);
 		$mockHttpRequest->shouldReceive('getHeader')->with('X-Request-Signature')->andReturn('SomeIdentifier' . ':' . base64_encode('InvalidSignature'));
 		$mockHttpRequest->shouldReceive('getHeader')->with('Content-Type')->andReturn('application/json');
-		$mockHttpRequest->shouldReceive('getHeader')->with('Date')->andReturn('Fri, 30 Nov 2012 16:37:05 GMT');
+		$mockHttpRequest->shouldReceive('getHeader')->with('Date')->andReturn(new \DateTime('Fri, 30 Nov 2012 16:37:05 +0000'));
 
 		$mockRsaWalletService
 			->shouldReceive('verifySignature')
