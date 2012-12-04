@@ -25,7 +25,7 @@ class SsoClient {
 	 * The client identifier
 	 * @var string
 	 */
-	protected $identifier;
+	protected $baseUri;
 
 	/**
 	 * @Flow\Inject
@@ -46,15 +46,15 @@ class SsoClient {
 	/**
 	 * @param string $identifier
 	 */
-	public function setIdentifier($identifier) {
-		$this->identifier = $identifier;
+	public function setBaseUri($identifier) {
+		$this->baseUri = $identifier;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getIdentifier() {
-		return $this->identifier;
+	public function getBaseUri() {
+		return $this->baseUri;
 	}
 
 	/**
