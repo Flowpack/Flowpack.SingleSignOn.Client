@@ -35,15 +35,21 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 	protected $globalAccountMapper;
 
 	/**
-	 * @var string
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Session\SessionInterface
 	 */
-	protected $globalSessionTouchGracePeriod = 60;
+	protected $session;
 
 	/**
 	 * @Flow\Inject
 	 * @var \TYPO3\Flow\Log\SecurityLoggerInterface
 	 */
 	protected $securityLogger;
+
+	/**
+	 * @var string
+	 */
+	protected $globalSessionTouchGracePeriod = 60;
 
 	/**
 	 * @param string $name
@@ -94,7 +100,8 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 				throw new Exception('Could not decrypt access token', 1351690950);
 			}
 
-			$authenticationData = $ssoServer->redeemAccessToken($ssoClient, $accessToken);
+			$clientSessionId = $this->session->getId();
+			$authenticationData = $ssoServer->redeemAccessToken($ssoClient, $accessToken, $clientSessionId);
 			$account = $this->globalAccountMapper->getAccount($ssoClient, $authenticationData['account']);
 
 			$authenticationToken->setGlobalSessionId($authenticationData['sessionId']);

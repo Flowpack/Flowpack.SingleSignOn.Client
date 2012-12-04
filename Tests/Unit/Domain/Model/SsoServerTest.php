@@ -82,6 +82,41 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function redeemAccessTokenWithClientSessionIdCallsRestServiceWithPostArgument() {
+		$ssoServer = new \TYPO3\SingleSignOn\Client\Domain\Model\SsoServer();
+		$ssoServer->setServiceBaseUri('http://ssodemoserver/test/sso');
+
+		$mockRequestEngine = m::mock('TYPO3\Flow\Http\Client\RequestEngineInterface');
+		$this->inject($ssoServer, 'requestEngine', $mockRequestEngine);
+
+		$mockRequestSigner = m::mock('TYPO3\SingleSignOn\Client\Security\RequestSigner');
+		$this->inject($ssoServer, 'requestSigner', $mockRequestSigner);
+		$mockRequestSigner->shouldReceive('signRequest')->andReturnUsing(function ($request) { return $request; });
+
+		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient', array(
+			'getKeyPairUuid' => 'ClientKeyPairFingerprint'
+		));
+
+		$mockResponse = m::mock('TYPO3\Flow\Http\Response', array(
+			'getStatusCode' => 201,
+			'getContent' => '{}'
+		));
+		$mockResponse->shouldReceive('getHeader')->with('Content-Type')->andReturn('application/json');
+		$mockRequestEngine->shouldReceive('sendRequest')->with(m::on(function($request) use (&$lastRequest) {
+			$lastRequest = $request;
+			return TRUE;
+		}))->once()->andReturn($mockResponse);
+
+
+		$ssoServer->redeemAccessToken($mockSsoClient, 'test-access-token', 'client-session-id');
+
+		$this->assertEquals('http://ssodemoserver/test/sso/token/test-access-token/redeem', (string)$lastRequest->getUri(), 'Argument should not be added to query');
+		$this->assertEquals('client-session-id', $lastRequest->getArgument('clientSessionId'), 'Argument should be added as POST argument');
+	}
+
+	/**
+	 * @test
+	 */
 	public function destroySessionCallsServerSessionRestService() {
 		$ssoServer = new \TYPO3\SingleSignOn\Client\Domain\Model\SsoServer();
 		$ssoServer->setServiceBaseUri('http://ssodemoserver/test/sso');

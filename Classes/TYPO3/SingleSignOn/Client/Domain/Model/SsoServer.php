@@ -93,12 +93,16 @@ class SsoServer {
 	/**
 	 * @param \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient $ssoClient
 	 * @param string $accessToken
+	 * @param string $clientSessionId
 	 * @return array
 	 */
-	public function redeemAccessToken(SsoClient $ssoClient, $accessToken) {
-		$serviceUri = $this->serviceBaseUri . '/token/' . urlencode($accessToken) . '/redeem';
-		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'POST');
+	public function redeemAccessToken(SsoClient $ssoClient, $accessToken, $clientSessionId = '') {
+		$serviceUri = new Uri($this->serviceBaseUri . '/token/' . urlencode($accessToken) . '/redeem');
+		$request = \TYPO3\Flow\Http\Request::create($serviceUri, 'POST');
 		$request->setHeader('Accept', 'application/json');
+		if ($clientSessionId !== NULL) {
+			$request->setContent(http_build_query(array('clientSessionId' => $clientSessionId)));
+		}
 
 		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getKeyPairUuid(), $ssoClient->getKeyPairUuid());
 
