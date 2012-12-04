@@ -163,7 +163,7 @@ class SsoServer {
 
 		// TODO Send request asynchronously
 		$response = $this->requestEngine->sendRequest($signedRequest);
-		if ($response->getStatusCode() !== 200) {
+		if ($response->getStatusCode() !== 200 && $response->getStatusCode() !== 404) {
 			throw new Exception('Unexpected status code for destroy session when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1354132939);
 		}
 	}
