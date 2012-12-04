@@ -35,3 +35,20 @@ TYPO3:
 #               entryPoint: 'TYPO3\SingleSignOn\Client\Security\EntryPoint\SingleSignOnRedirect'
 #               entryPointOptions:
 #                 server: DemoServer
+
+  Flow:
+    security:
+      firewall:
+        filters:
+          -
+            patternType: 'TYPO3\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern'
+            patternValue:
+              patterns:
+                -
+                  patternType: ControllerObjectName
+                  patternValue: 'TYPO3\SingleSignOn\Client\Controller\SessionController'
+                -
+                  patternType: 'TYPO3\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern'
+                  patternValue:
+                    resolverType: 'TYPO3\SingleSignOn\Client\Security\RequestPattern\SsoServerPublicKeyResolver'
+            interceptor: AccessDeny

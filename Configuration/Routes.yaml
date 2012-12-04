@@ -1,0 +1,9 @@
+-
+  name: 'SSO session destroy'
+  uriPattern: 'session/{sessionId}/destroy'
+  defaults:
+    '@package':    'TYPO3.SingleSignOn.Client'
+    '@controller': 'Session'
+    '@action':     'destroy'
+    '@format':     'json'
+
