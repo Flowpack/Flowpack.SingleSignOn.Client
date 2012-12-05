@@ -47,6 +47,12 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 	protected $securityLogger;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\SignalSlot\Dispatcher
+	 */
+	protected $signalSlotDispatcher;
+
+	/**
 	 * @var string
 	 */
 	protected $globalSessionTouchGracePeriod = 60;
@@ -126,7 +132,12 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 	public function canAuthenticate(\TYPO3\Flow\Security\Authentication\TokenInterface $authenticationToken) {
 		$canAuthenticate = parent::canAuthenticate($authenticationToken);
 		if ($canAuthenticate && $authenticationToken->isAuthenticated()) {
-			$this->touchSessionIfNeeded($authenticationToken);
+			try {
+				$this->touchSessionIfNeeded($authenticationToken);
+			} catch (\TYPO3\SingleSignOn\Client\Exception\SessionNotFoundException $exception) {
+				// FIXME Is there another way to unauthenticate the token?
+				$authenticationToken->setAuthenticationStatus(\TYPO3\Flow\Security\Authentication\TokenInterface::WRONG_CREDENTIALS);
+			}
 		}
 		return $canAuthenticate;
 	}
@@ -135,18 +146,20 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 	 * Touches the global session on the server to synchronize expiration between
 	 * clients and the server
 	 *
-	 * This is only done after a configurable grace period to limit the number of calls.
+	 * This is only done in a configurable minimal interval to limit the number of calls.
 	 *
 	 * @param \TYPO3\SingleSignOn\Client\Security\SingleSignOnToken $token
 	 * @return void
+	 * @throws \TYPO3\SingleSignOn\Client\Exception\SessionNotFoundException
 	 */
 	protected function touchSessionIfNeeded(SingleSignOnToken $token) {
 		$currentTime = time();
 		if ($currentTime - $token->getLastTouchTimestamp() > $this->globalSessionTouchGracePeriod) {
-			$this->securityLogger->log('Touching global session', LOG_DEBUG);
 			$ssoClient = $this->ssoClientFactory->create();
 			$ssoServer = $this->createSsoServer();
-			$ssoServer->touchSession($ssoClient, $token->getGlobalSessionId());
+			$sessionId = $token->getGlobalSessionId();
+
+			$ssoServer->touchSession($ssoClient, $sessionId);
 			$token->setLastTouchTimestamp(time());
 		}
 	}

@@ -96,7 +96,7 @@ class SsoServer {
 	 * @param string $clientSessionId
 	 * @return array
 	 */
-	public function redeemAccessToken(SsoClient $ssoClient, $accessToken, $clientSessionId = '') {
+	public function redeemAccessToken(SsoClient $ssoClient, $accessToken, $clientSessionId = NULL) {
 		$serviceUri = new Uri($this->serviceBaseUri . '/token/' . urlencode($accessToken) . '/redeem');
 		$request = \TYPO3\Flow\Http\Request::create($serviceUri, 'POST');
 		$request->setHeader('Accept', 'application/json');
@@ -134,6 +134,7 @@ class SsoServer {
 	 * @param \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient $ssoClient
 	 * @param string $sessionId
 	 * @return void
+	 * @throws \TYPO3\SingleSignOn\Client\Exception\SessionNotFoundException
 	 */
 	public function touchSession(SsoClient $ssoClient, $sessionId) {
 		$serviceUri = $this->serviceBaseUri . '/session/' . urlencode($sessionId) . '/touch';
@@ -141,8 +142,14 @@ class SsoServer {
 
 		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getKeyPairUuid(), $ssoClient->getKeyPairUuid());
 
-		// TODO Send request asynchronously
+		// TODO Handle timeout and other server errors (client should keep running!)
 		$response = $this->requestEngine->sendRequest($signedRequest);
+		if ($response->getStatusCode() === 404 && $response->getHeader('Content-Type') === 'application/json') {
+			$data = json_decode($response->getContent(), TRUE);
+			if (is_array($data) && isset($data['error']) && $data['error'] === 'SessionNotFound') {
+				throw new \TYPO3\SingleSignOn\Client\Exception\SessionNotFoundException();
+			}
+		}
 		if ($response->getStatusCode() !== 200) {
 			throw new Exception('Unexpected status code for touch session when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1354030063);
 		}
