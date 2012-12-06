@@ -19,7 +19,7 @@ class SsoClientFactory {
 	/**
 	 * @var string
 	 */
-	protected $clientBaseUri;
+	protected $clientServiceBaseUri;
 
 	/**
 	 * @var string
@@ -33,8 +33,8 @@ class SsoClientFactory {
 	 * @return void
 	 */
 	public function injectSettings(array $settings) {
-		if (isset($settings['client']['baseUri'])) {
-			$this->clientBaseUri = $settings['client']['baseUri'];
+		if (isset($settings['client']['serviceBaseUri'])) {
+			$this->clientServiceBaseUri = $settings['client']['serviceBaseUri'];
 		}
 		if (isset($settings['client']['keyPairUuid'])) {
 			$this->clientKeyPairUuid = $settings['client']['keyPairUuid'];
@@ -50,10 +50,10 @@ class SsoClientFactory {
 	 */
 	public function create() {
 		$ssoClient = new \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient();
-		if ((string)$this->clientBaseUri === '') {
-			throw new Exception('Missing TYPO3.SingleSignOn.Client.client.baseUri setting', 1351075078);
+		if ((string)$this->clientServiceBaseUri === '') {
+			throw new Exception('Missing TYPO3.SingleSignOn.Client.client.serviceBaseUri setting', 1351075078);
 		}
-		$ssoClient->setBaseUri($this->clientBaseUri);
+		$ssoClient->setServiceBaseUri($this->clientServiceBaseUri);
 		if ((string)$this->clientKeyPairUuid === '') {
 			throw new Exception('Missing TYPO3.SingleSignOn.Client.client.keyPairUuid setting', 1351075159);
 		}

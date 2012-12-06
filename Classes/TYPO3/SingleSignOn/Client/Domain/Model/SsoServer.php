@@ -67,7 +67,7 @@ class SsoServer {
 		$uri = new Uri($this->endpointUri);
 		$arguments = array(
 			'callbackUri' => (string)$callbackUri,
-			'ssoClientIdentifier' => $ssoClient->getBaseUri()
+			'ssoClientIdentifier' => $ssoClient->getServiceBaseUri()
 		);
 		ksort($arguments);
 		$uri->setQuery(http_build_query($arguments));
