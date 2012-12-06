@@ -25,18 +25,6 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $sessionManager;
 
 	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Client\Domain\Factory\SsoClientFactory
-	 */
-	protected $ssoClientFactory;
-
-	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Client\Domain\Factory\SsoServerFactory
-	 */
-	protected $ssoServerFactory;
-
-	/**
 	 * @var string
 	 */
 	protected $defaultViewObjectName = 'TYPO3\Flow\Mvc\View\JsonView';
@@ -50,8 +38,9 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * DELETE /sso/session/xyz-123/destroy
 	 *
 	 * @param string $sessionId The session id of the SSO client (not the global SSO session id)
+	 * @param string $serverIdentifier Optional server identifier
 	 */
-	public function destroyAction($sessionId) {
+	public function destroyAction($sessionId, $serverIdentifier = NULL) {
 		if ($this->request->getHttpRequest()->getMethod() !== 'DELETE') {
 			$this->response->setStatus(405);
 			$this->response->setHeader('Allow', 'DELETE');
@@ -60,8 +49,11 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 		$session = $this->sessionManager->getSession($sessionId);
 		if ($session !== NULL) {
-			// TODO Add server identifier to message
-			$session->destroy('Destroyed by session REST service from server ...');
+			$message = 'Destroyed by SSO client REST service';
+			if ($serverIdentifier !== NULL) {
+				$message .= ' from server "' . $serverIdentifier . '"';
+			}
+			$session->destroy($message);
 
 			$this->view->assign('value', array(
 				'success' => TRUE
