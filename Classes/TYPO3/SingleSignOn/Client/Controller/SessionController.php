@@ -7,7 +7,6 @@ namespace TYPO3\SingleSignOn\Client\Controller;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\SingleSignOn\Server\Exception;
 
 /**
  * Session management controller
@@ -60,6 +59,8 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			));
 		} else {
 			$this->response->setStatus(404);
+
+			$this->view->assign('value', array('error' => 'SessionNotFound'));
 		}
 	}
 
