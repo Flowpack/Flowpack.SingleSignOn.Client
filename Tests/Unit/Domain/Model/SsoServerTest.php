@@ -136,12 +136,13 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		)));
 
 		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient', array(
-			'getKeyPairUuid' => 'ClientKeyPairFingerprint'
+			'getKeyPairUuid' => 'ClientKeyPairFingerprint',
+			'getServiceBaseUri' => 'http://ssodemoclient/sso'
 		));
 
 		$ssoServer->destroySession($mockSsoClient, 'test-session-id');
 
-		$this->assertEquals('http://ssodemoserver/test/sso/session/test-session-id/destroy', (string)$lastRequest->getUri());
+		$this->assertStringStartsWith('http://ssodemoserver/test/sso/session/test-session-id/destroy', (string)$lastRequest->getUri());
 		$this->assertEquals('DELETE', $lastRequest->getMethod());
 	}
 
