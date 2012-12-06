@@ -18,7 +18,7 @@ TYPO3:
         #
         #   DemoServer:
         #     publicKeyUuid: 'bb5abb57faa122cc031e3c904db3d751'
-        #     endpointUri: 'http://ssoserver/sso/authentication'
+        #     serviceBaseUri: 'http://ssoserver/sso/authentication'
 
 # Example configuration for a SSO entry point
 #
