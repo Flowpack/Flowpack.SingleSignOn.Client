@@ -36,7 +36,7 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	/**
 	 * DELETE /sso/session/xyz-123/destroy
 	 *
-	 * @param string $sessionId The session id of the SSO client (not the global SSO session id)
+	 * @param string $sessionId The global session id to invalidate
 	 * @param string $serverIdentifier Optional server identifier
 	 */
 	public function destroyAction($sessionId, $serverIdentifier = NULL) {
@@ -46,13 +46,16 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			return;
 		}
 
-		$session = $this->sessionManager->getSession($sessionId);
-		if ($session !== NULL) {
+
+		$sessions = $this->sessionManager->getSessionsByTag('TYPO3_SingleSignOn_Client-' . $sessionId);
+		if ($sessions !== array()) {
 			$message = 'Destroyed by SSO client REST service';
 			if ($serverIdentifier !== NULL) {
 				$message .= ' from server "' . $serverIdentifier . '"';
 			}
-			$session->destroy($message);
+			foreach ($sessions as $session) {
+				$session->destroy($message);
+			}
 
 			$this->view->assign('value', array(
 				'success' => TRUE

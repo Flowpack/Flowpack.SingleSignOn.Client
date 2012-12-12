@@ -106,11 +106,12 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 				throw new Exception('Could not decrypt access token', 1351690950);
 			}
 
-			$clientSessionId = $this->session->getId();
-			$authenticationData = $ssoServer->redeemAccessToken($ssoClient, $accessToken, $clientSessionId);
+			$authenticationData = $ssoServer->redeemAccessToken($ssoClient, $accessToken);
 			$account = $this->globalAccountMapper->getAccount($ssoClient, $authenticationData['account']);
 
-			$authenticationToken->setGlobalSessionId($authenticationData['sessionId']);
+			$globalSessionId = $authenticationData['sessionId'];
+			$this->session->addTag('TYPO3_SingleSignOn_Client-' . $globalSessionId);
+			$authenticationToken->setGlobalSessionId($globalSessionId);
 			$authenticationToken->setAccount($account);
 
 			$authenticationToken->setAuthenticationStatus(\TYPO3\Flow\Security\Authentication\TokenInterface::AUTHENTICATION_SUCCESSFUL);
