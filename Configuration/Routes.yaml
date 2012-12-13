@@ -7,3 +7,11 @@
     '@action':     'destroy'
     '@format':     'json'
 
+-
+  name: 'SSO authentication callback'
+  uriPattern: 'authentication/callback'
+  defaults:
+    '@package':    'TYPO3.SingleSignOn.Client'
+    '@controller': 'Authentication'
+    '@action':     'callback'
+    '@format':     'html'
