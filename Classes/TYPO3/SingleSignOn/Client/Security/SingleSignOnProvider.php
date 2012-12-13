@@ -55,7 +55,7 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 	/**
 	 * @var string
 	 */
-	protected $globalSessionTouchGracePeriod = 60;
+	protected $globalSessionTouchInterval = 60;
 
 	/**
 	 * @param string $name
@@ -63,8 +63,8 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 	 */
 	public function __construct($name, array $options = array()) {
 		parent::__construct($name, $options);
-		if (isset($options['globalSessionTouchGracePeriod'])) {
-			$this->globalSessionTouchGracePeriod = (integer)$options['globalSessionTouchGracePeriod'];
+		if (isset($options['globalSessionTouchInterval'])) {
+			$this->globalSessionTouchInterval = (integer)$options['globalSessionTouchInterval'];
 		}
 	}
 
@@ -155,7 +155,7 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 	 */
 	protected function touchSessionIfNeeded(SingleSignOnToken $token) {
 		$currentTime = time();
-		if ($currentTime - $token->getLastTouchTimestamp() > $this->globalSessionTouchGracePeriod) {
+		if ($currentTime - $token->getLastTouchTimestamp() > $this->globalSessionTouchInterval) {
 			$ssoClient = $this->ssoClientFactory->create();
 			$ssoServer = $this->createSsoServer();
 			$sessionId = $token->getGlobalSessionId();

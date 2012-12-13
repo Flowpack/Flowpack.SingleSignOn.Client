@@ -32,7 +32,7 @@ TYPO3:
 #               provider: 'TYPO3\SingleSignOn\Client\Security\SingleSignOnProvider'
 #               providerOptions:
 #                 server: DemoServer
-#                 globalSessionTouchGracePeriod: 60
+#                 globalSessionTouchInterval: 60
 #               entryPoint: 'TYPO3\SingleSignOn\Client\Security\EntryPoint\SingleSignOnRedirect'
 #               entryPointOptions:
 #                 server: DemoServer
