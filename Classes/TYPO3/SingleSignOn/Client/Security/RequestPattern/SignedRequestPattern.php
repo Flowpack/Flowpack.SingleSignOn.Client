@@ -92,11 +92,30 @@ class SignedRequestPattern implements \TYPO3\Flow\Security\RequestPatternInterfa
 
 			if ($this->rsaWalletService->verifySignature($signData, $signature, $publicKeyFingerprint)) {
 				return FALSE;
+			} else {
+				$this->emitSignatureNotVerified($request, $identifier, $signData, $signature, $publicKeyFingerprint);
 			}
+		} else {
+			$this->emitSignatureHeaderMissing($request);
 		}
 
 		return TRUE;
 	}
 
+	/**
+	 * @param \TYPO3\Flow\Mvc\RequestInterface $request
+	 * @param string $identifier
+	 * @param string $signData
+	 * @param string $signature
+	 * @param string $publicKeyFingerprint
+	 */
+	protected function emitSignatureNotVerified($request, $identifier, $signData, $signature, $publicKeyFingerprint) {
+	}
+
+	/**
+	 * @param \TYPO3\Flow\Mvc\RequestInterface $request
+	 */
+	protected function emitSignatureHeaderMissing($request) {
+	}
 }
 ?>
