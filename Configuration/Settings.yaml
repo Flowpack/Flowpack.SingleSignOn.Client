@@ -53,3 +53,7 @@ TYPO3:
                   patternValue:
                     resolverType: 'TYPO3\SingleSignOn\Client\Security\RequestPattern\SsoServerPublicKeyResolver'
             interceptor: AccessDeny
+
+    object:
+      excludeClasses:
+       'mockery.mockery' : ['.*']

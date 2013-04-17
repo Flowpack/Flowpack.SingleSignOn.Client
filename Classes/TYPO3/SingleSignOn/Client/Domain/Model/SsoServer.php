@@ -99,6 +99,7 @@ class SsoServer {
 		$serviceUri = new Uri($this->serviceBaseUri . '/token/' . urlencode($accessToken) . '/redeem');
 		$request = \TYPO3\Flow\Http\Request::create($serviceUri, 'POST');
 		$request->setHeader('Accept', 'application/json');
+		$request->setContent('');
 
 		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getKeyPairUuid(), $ssoClient->getKeyPairUuid());
 
@@ -135,6 +136,7 @@ class SsoServer {
 	public function touchSession(SsoClient $ssoClient, $sessionId) {
 		$serviceUri = $this->serviceBaseUri . '/session/' . urlencode($sessionId) . '/touch';
 		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'POST');
+		$request->setContent('');
 
 		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getKeyPairUuid(), $ssoClient->getKeyPairUuid());
 
@@ -162,6 +164,7 @@ class SsoServer {
 		$serviceUri = new Uri($this->serviceBaseUri . '/session/' . urlencode($sessionId) . '/destroy');
 		$serviceUri->setQuery(http_build_query(array('clientIdentifier' => $ssoClient->getServiceBaseUri())));
 		$request = \TYPO3\Flow\Http\Request::create($serviceUri, 'DELETE');
+		$request->setContent('');
 
 		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getKeyPairUuid(), $ssoClient->getKeyPairUuid());
 

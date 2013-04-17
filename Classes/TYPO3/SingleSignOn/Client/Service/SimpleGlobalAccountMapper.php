@@ -47,7 +47,7 @@ class SimpleGlobalAccountMapper implements GlobalAccountMapperInterface {
 		$account = new \TYPO3\Flow\Security\Account();
 		$account->setAccountIdentifier($globalAccountData['accountIdentifier']);
 		$account->setAuthenticationProviderName('SingleSignOn');
-		$account->setRoles($globalAccountData['roles']);
+		$account->setRoles(array_map(function($roleIdentifier) { return new \TYPO3\Flow\Security\Policy\Role($roleIdentifier); }, $globalAccountData['roles']));
 
 		if (isset($globalAccountData['party'])) {
 			$party = $this->mapParty($globalAccountData['party']);
