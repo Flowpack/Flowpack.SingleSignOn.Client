@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Client\Tests\Unit\Service;
+namespace Flowpack\SingleSignOn\Client\Tests\Unit\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Client".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client".*
  *                                                                        *
  *                                                                        */
 
@@ -17,11 +17,11 @@ class SingleSignOnManagerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function logoutCallsDestroySessionForSsoServersFromTokens() {
-		$manager = new \TYPO3\SingleSignOn\Client\Service\SingleSignOnManager();
+		$manager = new \Flowpack\SingleSignOn\Client\Service\SingleSignOnManager();
 
-		$mockSsoClientFactory = m::mock('TYPO3\SingleSignOn\Client\Domain\Factory\SsoClientFactory');
+		$mockSsoClientFactory = m::mock('Flowpack\SingleSignOn\Client\Domain\Factory\SsoClientFactory');
 		$this->inject($manager, 'ssoClientFactory', $mockSsoClientFactory);
-		$mockSsoServerFactory = m::mock('TYPO3\SingleSignOn\Client\Domain\Factory\SsoServerFactory');
+		$mockSsoServerFactory = m::mock('Flowpack\SingleSignOn\Client\Domain\Factory\SsoServerFactory');
 		$this->inject($manager, 'ssoServerFactory', $mockSsoServerFactory);
 		$mockConfigurationManager = m::mock('TYPO3\Flow\Configuration\ConfigurationManager');
 		$this->inject($manager, 'configurationManager', $mockConfigurationManager);
@@ -46,17 +46,17 @@ class SingleSignOnManagerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			));
 		$mockSecurityContext
 			->shouldReceive('getAuthenticationTokensOfType')
-			->with('TYPO3\SingleSignOn\Client\Security\SingleSignOnToken')
+			->with('Flowpack\SingleSignOn\Client\Security\SingleSignOnToken')
 			->andReturn(array(
-				m::mock('TYPO3\SingleSignOn\Client\Security\SingleSignOnToken', array(
+				m::mock('Flowpack\SingleSignOn\Client\Security\SingleSignOnToken', array(
 					'getAuthenticationProviderName' => 'SsoTestProvider',
 					'getGlobalSessionId' => 'test-session-id'
 				)
 			)));
-		$mockSsoServer = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoServer');
+		$mockSsoServer = m::mock('Flowpack\SingleSignOn\Client\Domain\Model\SsoServer');
 		$mockSsoServerFactory->shouldReceive('create')->with('TestServer')->andReturn($mockSsoServer);
 
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient');
+		$mockSsoClient = m::mock('Flowpack\SingleSignOn\Client\Domain\Model\SsoClient');
 		$mockSsoClientFactory->shouldReceive('create')->andReturn($mockSsoClient);
 
 		$mockSsoServer->shouldReceive('destroySession')->with($mockSsoClient, 'test-session-id')->once();

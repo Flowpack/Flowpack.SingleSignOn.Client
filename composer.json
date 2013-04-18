@@ -1,13 +1,13 @@
 {
-	"name": "typo3\/singlesignon-client",
+	"name": "flowpack\/singlesignon-client",
 	"type": "typo3-flow-package",
-	"description": "TYPO3 SingleSignOn Client",
+	"description": "Flowpack SingleSignOn Client",
 	"require": {
 		"typo3\/flow": "*"
 	},
 	"autoload": {
 		"psr-0": {
-			"TYPO3\\SingleSignOn\\Client": "Classes"
+			"Flowpack\\SingleSignOn\\Client": "Classes"
 		}
 	}
 }

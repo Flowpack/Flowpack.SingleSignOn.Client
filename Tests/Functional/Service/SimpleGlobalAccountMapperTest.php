@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Client\Tests\Functional\Service;
+namespace Flowpack\SingleSignOn\Client\Tests\Functional\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Client".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client".*
  *                                                                        *
  *                                                                        */
 
@@ -17,7 +17,7 @@ class SimpleGlobalAccountMapperTest extends \TYPO3\Flow\Tests\FunctionalTestCase
 	 * @test
 	 */
 	public function getAccountMapsPartyToExistingClass() {
-		$ssoClient = new \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient();
+		$ssoClient = new \Flowpack\SingleSignOn\Client\Domain\Model\SsoClient();
 		$accountData = array(
 			'accountIdentifier' => 'jdoe',
 			'roles' => array('Administrator'),
@@ -30,8 +30,8 @@ class SimpleGlobalAccountMapperTest extends \TYPO3\Flow\Tests\FunctionalTestCase
 			)
 		);
 
-		/** @var \TYPO3\SingleSignOn\Client\Service\GlobalAccountMapperInterface $accountMapper */
-		$accountMapper = $this->objectManager->get('TYPO3\SingleSignOn\Client\Service\SimpleGlobalAccountMapper');
+		/** @var \Flowpack\SingleSignOn\Client\Service\GlobalAccountMapperInterface $accountMapper */
+		$accountMapper = $this->objectManager->get('Flowpack\SingleSignOn\Client\Service\SimpleGlobalAccountMapper');
 
 		$account = $accountMapper->getAccount($ssoClient, $accountData);
 
@@ -42,7 +42,7 @@ class SimpleGlobalAccountMapperTest extends \TYPO3\Flow\Tests\FunctionalTestCase
 	 * @test
 	 */
 	public function getAccountUsesTypeMappingForParty() {
-		$ssoClient = new \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient();
+		$ssoClient = new \Flowpack\SingleSignOn\Client\Domain\Model\SsoClient();
 		$accountData = array(
 			'accountIdentifier' => 'jdoe',
 			'roles' => array('Administrator'),
@@ -55,8 +55,8 @@ class SimpleGlobalAccountMapperTest extends \TYPO3\Flow\Tests\FunctionalTestCase
 			)
 		);
 
-		/** @var \TYPO3\SingleSignOn\Client\Service\SimpleGlobalAccountMapper $accountMapper */
-		$accountMapper = $this->objectManager->get('TYPO3\SingleSignOn\Client\Service\SimpleGlobalAccountMapper');
+		/** @var \Flowpack\SingleSignOn\Client\Service\SimpleGlobalAccountMapper $accountMapper */
+		$accountMapper = $this->objectManager->get('Flowpack\SingleSignOn\Client\Service\SimpleGlobalAccountMapper');
 		$accountMapper->setTypeMapping(array(
 			'Legacy\Person' => 'TYPO3\Party\Domain\Model\Person'
 		));

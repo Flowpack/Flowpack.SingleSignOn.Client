@@ -2,7 +2,7 @@
   name: 'SSO session destroy'
   uriPattern: 'session/{sessionId}/destroy'
   defaults:
-    '@package':    'TYPO3.SingleSignOn.Client'
+    '@package':    'Flowpack.SingleSignOn.Client'
     '@controller': 'Session'
     '@action':     'destroy'
     '@format':     'json'
@@ -11,7 +11,7 @@
   name: 'SSO authentication callback'
   uriPattern: 'authentication/callback'
   defaults:
-    '@package':    'TYPO3.SingleSignOn.Client'
+    '@package':    'Flowpack.SingleSignOn.Client'
     '@controller': 'Authentication'
     '@action':     'callback'
     '@format':     'html'

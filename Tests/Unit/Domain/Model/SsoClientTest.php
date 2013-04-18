@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Client\Tests\Unit\Domain\Model;
+namespace Flowpack\SingleSignOn\Client\Tests\Unit\Domain\Model;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Client".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client".*
  *                                                                        *
  *                                                                        */
 
@@ -17,7 +17,7 @@ class SsoClientTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function decryptCallbackAccessTokenUsesRsaWalletServiceAndClientKeyPair() {
-		$ssoClient = new \TYPO3\SingleSignOn\Client\Domain\Model\SsoClient();
+		$ssoClient = new \Flowpack\SingleSignOn\Client\Domain\Model\SsoClient();
 		$ssoClient->setKeyPairUuid('key-pair-uuid');
 
 		$mockRsaWalletService = m::mock('TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface');

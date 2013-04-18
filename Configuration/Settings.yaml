@@ -1,8 +1,8 @@
 #
-# Default Settings for TYPO3.SingleSignOn.Client
+# Default Settings for Flowpack.SingleSignOn.Client
 #
 
-TYPO3:
+Flowpack:
   SingleSignOn:
     Client:
       # SSO client configuration
@@ -29,29 +29,30 @@ TYPO3:
 #         authentication:
 #           providers:
 #             SingleSignOnProvider:
-#               provider: 'TYPO3\SingleSignOn\Client\Security\SingleSignOnProvider'
+#               provider: 'Flowpack\SingleSignOn\Client\Security\SingleSignOnProvider'
 #               providerOptions:
 #                 server: DemoServer
 #                 globalSessionTouchInterval: 60
-#               entryPoint: 'TYPO3\SingleSignOn\Client\Security\EntryPoint\SingleSignOnRedirect'
+#               entryPoint: 'Flowpack\SingleSignOn\Client\Security\EntryPoint\SingleSignOnRedirect'
 #               entryPointOptions:
 #                 server: DemoServer
 
+TYPO3:
   Flow:
     security:
       firewall:
         filters:
           -
-            patternType: 'TYPO3\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern'
+            patternType: 'Flowpack\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern'
             patternValue:
               patterns:
                 -
                   patternType: ControllerObjectName
-                  patternValue: 'TYPO3\SingleSignOn\Client\Controller\SessionController'
+                  patternValue: 'Flowpack\SingleSignOn\Client\Controller\SessionController'
                 -
-                  patternType: 'TYPO3\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern'
+                  patternType: 'Flowpack\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern'
                   patternValue:
-                    resolverType: 'TYPO3\SingleSignOn\Client\Security\RequestPattern\SsoServerPublicKeyResolver'
+                    resolverType: 'Flowpack\SingleSignOn\Client\Security\RequestPattern\SsoServerPublicKeyResolver'
             interceptor: AccessDeny
 
     object:

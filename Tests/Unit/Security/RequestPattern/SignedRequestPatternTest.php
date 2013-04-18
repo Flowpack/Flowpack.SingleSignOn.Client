@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Client\Tests\Unit\Security\RequestPattern;
+namespace Flowpack\SingleSignOn\Client\Tests\Unit\Security\RequestPattern;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Client".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client".*
  *                                                                        *
  *                                                                        */
 
@@ -18,7 +18,7 @@ class SignedRequestPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function matchRequestWithRequestAndNoSignatureHeaderReturnsTrue() {
-		$pattern = new \TYPO3\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern();
+		$pattern = new \Flowpack\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern();
 
 		$mockHttpRequest = m::mock('TYPO3\Flow\Http\Request');
 		$mockActionRequest = m::mock('TYPO3\Flow\Mvc\ActionRequest', array(
@@ -35,15 +35,15 @@ class SignedRequestPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function matchRequestWithRequestAndValidSignatureHeaderVerifiesSignature() {
-		$pattern = new \TYPO3\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern();
+		$pattern = new \Flowpack\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern();
 
 		$mockRsaWalletService = m::mock('TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface');
 		$this->inject($pattern, 'rsaWalletService', $mockRsaWalletService);
 
-		$mockPublicKeyResolver = m::mock('TYPO3\SingleSignOn\Client\Security\RequestPattern\PublicKeyResolverInterface');
+		$mockPublicKeyResolver = m::mock('Flowpack\SingleSignOn\Client\Security\RequestPattern\PublicKeyResolverInterface');
 		$this->inject($pattern, 'publicKeyResolver', $mockPublicKeyResolver);
 
-		$this->inject($pattern, 'requestSigner', new \TYPO3\SingleSignOn\Client\Security\RequestSigner());
+		$this->inject($pattern, 'requestSigner', new \Flowpack\SingleSignOn\Client\Security\RequestSigner());
 
 		$mockHttpRequest = m::mock('TYPO3\Flow\Http\Request', array(
 			'getMethod' => 'POST',
@@ -76,15 +76,15 @@ class SignedRequestPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function matchRequestWithRequestAndInvalidSignatureHeaderReturnsTrue() {
-		$pattern = new \TYPO3\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern();
+		$pattern = new \Flowpack\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern();
 
 		$mockRsaWalletService = m::mock('TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface');
 		$this->inject($pattern, 'rsaWalletService', $mockRsaWalletService);
 
-		$mockPublicKeyResolver = m::mock('TYPO3\SingleSignOn\Client\Security\PublicKeyResolverInterface');
+		$mockPublicKeyResolver = m::mock('Flowpack\SingleSignOn\Client\Security\PublicKeyResolverInterface');
 		$this->inject($pattern, 'publicKeyResolver', $mockPublicKeyResolver);
 
-		$this->inject($pattern, 'requestSigner', new \TYPO3\SingleSignOn\Client\Security\RequestSigner());
+		$this->inject($pattern, 'requestSigner', new \Flowpack\SingleSignOn\Client\Security\RequestSigner());
 
 		$mockHttpRequest = m::mock('TYPO3\Flow\Http\Request', array(
 			'getMethod' => 'POST',

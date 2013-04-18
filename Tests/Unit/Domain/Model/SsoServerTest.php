@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Client\Tests\Unit\Domain\Model;
+namespace Flowpack\SingleSignOn\Client\Tests\Unit\Domain\Model;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Client".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client".*
  *                                                                        *
  *                                                                        */
 
@@ -17,17 +17,17 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function touchSessionCallsServerSessionRestService() {
-		$ssoServer = new \TYPO3\SingleSignOn\Client\Domain\Model\SsoServer();
+		$ssoServer = new \Flowpack\SingleSignOn\Client\Domain\Model\SsoServer();
 		$ssoServer->setServiceBaseUri('http://ssodemoserver/test/sso');
 
 		$mockRequestEngine = m::mock('TYPO3\Flow\Http\Client\RequestEngineInterface');
 		$this->inject($ssoServer, 'requestEngine', $mockRequestEngine);
 
-		$mockRequestSigner = m::mock('TYPO3\SingleSignOn\Client\Security\RequestSigner');
+		$mockRequestSigner = m::mock('Flowpack\SingleSignOn\Client\Security\RequestSigner');
 		$this->inject($ssoServer, 'requestSigner', $mockRequestSigner);
 		$mockRequestSigner->shouldReceive('signRequest')->andReturnUsing(function ($request) { return $request; });
 
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient', array(
+		$mockSsoClient = m::mock('Flowpack\SingleSignOn\Client\Domain\Model\SsoClient', array(
 			'getKeyPairUuid' => 'ClientKeyPairFingerprint'
 		));
 
@@ -48,17 +48,17 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function redeemAccessTokenCallsServerAccessTokenRestService() {
-		$ssoServer = new \TYPO3\SingleSignOn\Client\Domain\Model\SsoServer();
+		$ssoServer = new \Flowpack\SingleSignOn\Client\Domain\Model\SsoServer();
 		$ssoServer->setServiceBaseUri('http://ssodemoserver/test/sso');
 
 		$mockRequestEngine = m::mock('TYPO3\Flow\Http\Client\RequestEngineInterface');
 		$this->inject($ssoServer, 'requestEngine', $mockRequestEngine);
 
-		$mockRequestSigner = m::mock('TYPO3\SingleSignOn\Client\Security\RequestSigner');
+		$mockRequestSigner = m::mock('Flowpack\SingleSignOn\Client\Security\RequestSigner');
 		$this->inject($ssoServer, 'requestSigner', $mockRequestSigner);
 		$mockRequestSigner->shouldReceive('signRequest')->andReturnUsing(function ($request) { return $request; });
 
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient', array(
+		$mockSsoClient = m::mock('Flowpack\SingleSignOn\Client\Domain\Model\SsoClient', array(
 			'getKeyPairUuid' => 'ClientKeyPairFingerprint'
 		));
 
@@ -83,13 +83,13 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function destroySessionCallsServerSessionRestService() {
-		$ssoServer = new \TYPO3\SingleSignOn\Client\Domain\Model\SsoServer();
+		$ssoServer = new \Flowpack\SingleSignOn\Client\Domain\Model\SsoServer();
 		$ssoServer->setServiceBaseUri('http://ssodemoserver/test/sso');
 
 		$mockRequestEngine = m::mock('TYPO3\Flow\Http\Client\RequestEngineInterface');
 		$this->inject($ssoServer, 'requestEngine', $mockRequestEngine);
 
-		$mockRequestSigner = m::mock('TYPO3\SingleSignOn\Client\Security\RequestSigner');
+		$mockRequestSigner = m::mock('Flowpack\SingleSignOn\Client\Security\RequestSigner');
 		$this->inject($ssoServer, 'requestSigner', $mockRequestSigner);
 		$mockRequestSigner->shouldReceive('signRequest')->andReturnUsing(function ($request) { return $request; });
 
@@ -100,7 +100,7 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			'getStatusCode' => 200
 		)));
 
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Client\Domain\Model\SsoClient', array(
+		$mockSsoClient = m::mock('Flowpack\SingleSignOn\Client\Domain\Model\SsoClient', array(
 			'getKeyPairUuid' => 'ClientKeyPairFingerprint',
 			'getServiceBaseUri' => 'http://ssodemoclient/sso'
 		));

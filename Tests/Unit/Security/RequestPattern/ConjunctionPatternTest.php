@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Client\Tests\Unit\Security\RequestPattern;
+namespace Flowpack\SingleSignOn\Client\Tests\Unit\Security\RequestPattern;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Client".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client".*
  *                                                                        *
  *                                                                        */
 
@@ -18,7 +18,7 @@ class ConjunctionPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function matchRequestReturnsFalseOnFirstSubpatternFail() {
-		$pattern = new \TYPO3\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern();
+		$pattern = new \Flowpack\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern();
 
 		$mockObjectManager = m::mock('TYPO3\Flow\Object\ObjectManagerInterface');
 		$this->inject($pattern, 'objectManager', $mockObjectManager);
@@ -58,7 +58,7 @@ class ConjunctionPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function matchRequestReturnsTrueIfAllSubpatternsMatch() {
-		$pattern = new \TYPO3\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern();
+		$pattern = new \Flowpack\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern();
 
 		$mockObjectManager = m::mock('TYPO3\Flow\Object\ObjectManagerInterface');
 		$this->inject($pattern, 'objectManager', $mockObjectManager);
@@ -98,7 +98,7 @@ class ConjunctionPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function matchRequestReturnsTrueWithEmptySubpatterns() {
-		$pattern = new \TYPO3\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern();
+		$pattern = new \Flowpack\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern();
 
 		$pattern->setPattern(array(
 			'patterns' => array()
