@@ -64,8 +64,8 @@ class SingleSignOnToken extends \TYPO3\Flow\Security\Authentication\Token\Abstra
 
 			// Check if we have a callback request
 		$arguments = $httpRequest->getArguments();
-		$accessTokenCipher = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($arguments, '__typo3.singlesignon.accessToken');
-		$signature = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($arguments, '__typo3.singlesignon.signature');
+		$accessTokenCipher = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($arguments, '__flowpack.singlesignon.accessToken');
+		$signature = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($arguments, '__flowpack.singlesignon.signature');
 
 		if (!empty($accessTokenCipher) && !empty($signature)) {
 				// Get callback parameters from request
@@ -74,7 +74,7 @@ class SingleSignOnToken extends \TYPO3\Flow\Security\Authentication\Token\Abstra
 
 			$this->callbackUri = $actionRequest->getHttpRequest()->getUri();
 			$arguments = $this->callbackUri->getArguments();
-			unset($arguments['__typo3']);
+			unset($arguments['__flowpack']);
 			$this->callbackUri->setQuery(http_build_query($arguments));
 
 			$this->setAuthenticationStatus(self::AUTHENTICATION_NEEDED);
