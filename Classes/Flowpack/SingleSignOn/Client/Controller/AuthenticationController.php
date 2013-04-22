@@ -1,12 +1,12 @@
 <?php
 namespace Flowpack\SingleSignOn\Client\Controller;
 
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client".*
- *                                                                        *
- *                                                                        */
+/*                                                                               *
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client". *
+ *                                                                               */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Mvc\Controller\ActionController;
 
 /**
  * Authentication controller
@@ -15,7 +15,7 @@ use TYPO3\Flow\Annotations as Flow;
  *
  * @Flow\Scope("singleton")
  */
-class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionController {
+class AuthenticationController extends ActionController {
 
 	/**
 	 * @Flow\Inject
@@ -36,6 +36,7 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 	 * GET /sso/authentication/callback?...
 	 *
 	 * @param string $callbackUri
+	 * @return void
 	 */
 	public function callbackAction($callbackUri) {
 		try {
@@ -54,7 +55,7 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 				$this->redirectToUri($callbackUri);
 			}
 		} else {
-			// TODO Show an error message
+			throw new \Flowpack\SingleSignOn\Client\Exception('Could not authenticate in callbackAction triggered by the SSO server.', 1366613161, (isset($authenticationException) ? $authenticationException : NULL));
 		}
 	}
 

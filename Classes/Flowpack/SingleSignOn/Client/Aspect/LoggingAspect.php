@@ -1,10 +1,9 @@
 <?php
 namespace Flowpack\SingleSignOn\Client\Aspect;
 
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client".*
- *                                                                        *
- *                                                                        */
+/*                                                                               *
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client". *
+ *                                                                               */
 
 use TYPO3\Flow\Annotations as Flow;
 
@@ -23,7 +22,7 @@ class LoggingAspect {
 	protected $securityLogger;
 
 	/**
-	 *
+	 * Log signed request pattern failures
 	 *
 	 * @Flow\AfterReturning("method(Flowpack\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern->emitSignatureNotVerified())")
 	 * @param \TYPO3\Flow\Aop\JoinPointInterface $joinPoint The current joinpoint

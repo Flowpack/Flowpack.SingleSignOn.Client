@@ -1,19 +1,19 @@
 <?php
 namespace Flowpack\SingleSignOn\Client\Command;
 
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client".*
- *                                                                        *
- *                                                                        */
+/*                                                                               *
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client". *
+ *                                                                               */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Cli\CommandController;
 
 /**
- * Command controller for key management
+ * Command controller for the SSO client
  *
  * @Flow\Scope("singleton")
  */
-class SingleSignOnCommandController extends \TYPO3\Flow\Cli\CommandController {
+class SsoClientCommandController extends CommandController {
 
 	/**
 	 * @var \TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface
@@ -25,7 +25,7 @@ class SingleSignOnCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * Generate key pair command
 	 *
 	 * Creates a new key pair and imports it into the wallet.
-	 * Useful for SSO client and server.
+	 * Used by SSO client and server.
 	 *
 	 * @return void
 	 */
