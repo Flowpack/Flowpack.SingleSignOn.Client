@@ -9,11 +9,11 @@ use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Cli\CommandController;
 
 /**
- * Command controller for the SSO client
+ * Command controller for the SSO key management
  *
  * @Flow\Scope("singleton")
  */
-class SsoClientCommandController extends CommandController {
+class SsoKeyCommandController extends CommandController {
 
 	/**
 	 * @var \TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface
