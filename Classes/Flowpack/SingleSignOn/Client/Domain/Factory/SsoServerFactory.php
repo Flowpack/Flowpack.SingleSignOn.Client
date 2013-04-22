@@ -55,12 +55,12 @@ class SsoServerFactory {
 		$ssoServer->setServiceBaseUri($serverConfiguration['serviceBaseUri']);
 		$ssoServer->setEndpointUri($serverConfiguration['serviceBaseUri'] . '/authentication');
 
-		if (!isset($serverConfiguration['publicKeyUuid']) || (string)$serverConfiguration['publicKeyUuid'] === '') {
-			throw new Exception('Missing publicKeyUuid setting for Flowpack.SingleSignOn.Client.server.' . $serverIdentifier, 1351688420);
+		if (!isset($serverConfiguration['publicKeyFingerprint']) || (string)$serverConfiguration['publicKeyFingerprint'] === '') {
+			throw new Exception('Missing publicKeyFingerprint setting for Flowpack.SingleSignOn.Client.server.' . $serverIdentifier, 1351688420);
 		}
-		$ssoServer->setPublicKey($serverConfiguration['publicKeyUuid']);
-		if (!isset($serverConfiguration['publicKeyUuid']) || (string)$serverConfiguration['publicKeyUuid'] === '') {
-			throw new Exception('Missing publicKeyUuid setting for Flowpack.SingleSignOn.Client.server.' . $serverIdentifier, 1351688420);
+		$ssoServer->setPublicKey($serverConfiguration['publicKeyFingerprint']);
+		if (!isset($serverConfiguration['publicKeyFingerprint']) || (string)$serverConfiguration['publicKeyFingerprint'] === '') {
+			throw new Exception('Missing publicKeyFingerprint setting for Flowpack.SingleSignOn.Client.server.' . $serverIdentifier, 1351688420);
 		}
 
 		// TODO Set service base URI

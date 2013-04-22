@@ -46,7 +46,7 @@ class SsoServerRepository {
 	 */
 	public function findByPublicKey($fingerprint) {
 		foreach ($this->serverConfigurations as $serverIdentifier => $serverConfiguration) {
-			if (isset($serverConfiguration['publicKeyUuid']) && $serverConfiguration['publicKeyUuid'] === $fingerprint) {
+			if (isset($serverConfiguration['publicKeyFingerprint']) && $serverConfiguration['publicKeyFingerprint'] === $fingerprint) {
 				return $this->ssoServerFactory->create($serverIdentifier);
 			}
 		}

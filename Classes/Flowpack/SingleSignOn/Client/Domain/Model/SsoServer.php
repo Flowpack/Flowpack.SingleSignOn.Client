@@ -72,7 +72,7 @@ class SsoServer {
 		ksort($arguments);
 		$uri->setQuery(http_build_query($arguments));
 
-		$signature = $this->rsaWalletService->sign((string)$uri, $ssoClient->getKeyPairUuid());
+		$signature = $this->rsaWalletService->sign((string)$uri, $ssoClient->getPublicKeyFingerprint());
 		$arguments['signature'] = base64_encode($signature);
 		$uri->setQuery(http_build_query($arguments));
 
@@ -101,7 +101,7 @@ class SsoServer {
 		$request->setHeader('Accept', 'application/json');
 		$request->setContent('');
 
-		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getKeyPairUuid(), $ssoClient->getKeyPairUuid());
+		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getPublicKeyFingerprint(), $ssoClient->getPublicKeyFingerprint());
 
 		$response = $this->requestEngine->sendRequest($signedRequest);
 		if ($response->getStatusCode() !== 201) {
@@ -138,7 +138,7 @@ class SsoServer {
 		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'POST');
 		$request->setContent('');
 
-		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getKeyPairUuid(), $ssoClient->getKeyPairUuid());
+		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getPublicKeyFingerprint(), $ssoClient->getPublicKeyFingerprint());
 
 		// TODO Handle timeout and other server errors (client should keep running!)
 		$response = $this->requestEngine->sendRequest($signedRequest);
@@ -166,7 +166,7 @@ class SsoServer {
 		$request = \TYPO3\Flow\Http\Request::create($serviceUri, 'DELETE');
 		$request->setContent('');
 
-		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getKeyPairUuid(), $ssoClient->getKeyPairUuid());
+		$signedRequest = $this->requestSigner->signRequest($request, $ssoClient->getPublicKeyFingerprint(), $ssoClient->getPublicKeyFingerprint());
 
 		// TODO Send request asynchronously
 		$response = $this->requestEngine->sendRequest($signedRequest);

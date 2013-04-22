@@ -28,7 +28,7 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockRequestSigner->shouldReceive('signRequest')->andReturnUsing(function ($request) { return $request; });
 
 		$mockSsoClient = m::mock('Flowpack\SingleSignOn\Client\Domain\Model\SsoClient', array(
-			'getKeyPairUuid' => 'ClientKeyPairFingerprint'
+			'getPublicKeyFingerprint' => 'ClientPublicKeyFingerprint'
 		));
 
 		$mockRequestEngine->shouldReceive('sendRequest')->with(m::on(function($request) use (&$lastRequest) {
@@ -59,7 +59,7 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockRequestSigner->shouldReceive('signRequest')->andReturnUsing(function ($request) { return $request; });
 
 		$mockSsoClient = m::mock('Flowpack\SingleSignOn\Client\Domain\Model\SsoClient', array(
-			'getKeyPairUuid' => 'ClientKeyPairFingerprint'
+			'getPublicKeyFingerprint' => 'ClientPublicKeyFingerprint'
 		));
 
 		$mockResponse = m::mock('TYPO3\Flow\Http\Response', array(
@@ -101,7 +101,7 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		)));
 
 		$mockSsoClient = m::mock('Flowpack\SingleSignOn\Client\Domain\Model\SsoClient', array(
-			'getKeyPairUuid' => 'ClientKeyPairFingerprint',
+			'getPublicKeyFingerprint' => 'ClientPublicKeyFingerprint',
 			'getServiceBaseUri' => 'http://ssodemoclient/sso'
 		));
 

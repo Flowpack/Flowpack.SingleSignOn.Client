@@ -19,7 +19,7 @@ class SsoClient {
 	 * The key pair uuid
 	 * @var string
 	 */
-	protected $keyPairUuid;
+	protected $publicKeyFingerprint;
 
 	/**
 	 * The client identifier
@@ -40,7 +40,7 @@ class SsoClient {
 	 * @return string The decrypted access token or an empty string if the access token could not be decrypted
 	 */
 	public function decryptCallbackAccessToken($accessTokenCipher) {
-		return $this->rsaWalletService->decrypt($accessTokenCipher, $this->keyPairUuid);
+		return $this->rsaWalletService->decrypt($accessTokenCipher, $this->publicKeyFingerprint);
 	}
 
 	/**
@@ -59,17 +59,17 @@ class SsoClient {
 	}
 
 	/**
-	 * @param string $keyPairUuid
+	 * @param string $publicKeyFingerprint
 	 */
-	public function setKeyPairUuid($keyPairUuid) {
-		$this->keyPairUuid = $keyPairUuid;
+	public function setPublicKeyFingerprint($publicKeyFingerprint) {
+		$this->publicKeyFingerprint = $publicKeyFingerprint;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getKeyPairUuid() {
-		return $this->keyPairUuid;
+	public function getPublicKeyFingerprint() {
+		return $this->publicKeyFingerprint;
 	}
 
 }

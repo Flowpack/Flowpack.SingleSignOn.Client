@@ -11,14 +11,14 @@ Flowpack:
         # Must point to the URI where the SSO client routes are mounted
         serviceBaseUri: ''
         # The client key pair fingerprint
-        keyPairUuid: ''
+        publicKeyFingerprint: ''
 
       # A list of named SSO server configurations
       server:
         # Example server configuration
         #
         #   DemoServer:
-        #     publicKeyUuid: 'bb5abb57faa122cc031e3c904db3d751'
+        #     publicKeyFingerprint: 'bb5abb57faa122cc031e3c904db3d751'
         #     serviceBaseUri: 'http://ssoserver/sso'
 
 # Example configuration for a SSO entry point

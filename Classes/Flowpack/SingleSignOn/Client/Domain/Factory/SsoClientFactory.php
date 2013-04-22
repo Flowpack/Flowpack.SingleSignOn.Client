@@ -24,7 +24,7 @@ class SsoClientFactory {
 	/**
 	 * @var string
 	 */
-	protected $clientKeyPairUuid;
+	protected $clientPublicKeyFingerprint;
 
 	/**
 	 * Prepare settings
@@ -36,8 +36,8 @@ class SsoClientFactory {
 		if (isset($settings['client']['serviceBaseUri'])) {
 			$this->clientServiceBaseUri = $settings['client']['serviceBaseUri'];
 		}
-		if (isset($settings['client']['keyPairUuid'])) {
-			$this->clientKeyPairUuid = $settings['client']['keyPairUuid'];
+		if (isset($settings['client']['publicKeyFingerprint'])) {
+			$this->clientPublicKeyFingerprint = $settings['client']['publicKeyFingerprint'];
 		}
 	}
 
@@ -54,10 +54,10 @@ class SsoClientFactory {
 			throw new Exception('Missing Flowpack.SingleSignOn.Client.client.serviceBaseUri setting', 1351075078);
 		}
 		$ssoClient->setServiceBaseUri($this->clientServiceBaseUri);
-		if ((string)$this->clientKeyPairUuid === '') {
-			throw new Exception('Missing Flowpack.SingleSignOn.Client.client.keyPairUuid setting', 1351075159);
+		if ((string)$this->clientPublicKeyFingerprint === '') {
+			throw new Exception('Missing Flowpack.SingleSignOn.Client.client.publicKeyFingerprint setting', 1351075159);
 		}
-		$ssoClient->setKeyPairUuid($this->clientKeyPairUuid);
+		$ssoClient->setPublicKeyFingerprint($this->clientPublicKeyFingerprint);
 		return $ssoClient;
 	}
 

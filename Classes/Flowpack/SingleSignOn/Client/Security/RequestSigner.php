@@ -22,14 +22,14 @@ class RequestSigner {
 	/**
 	 * @param \TYPO3\Flow\Http\Request $request
 	 * @param string $identifier
-	 * @param string $keyPairFingerprint
+	 * @param string $publicKeyFingerprint
 	 * @return \TYPO3\Flow\Http\Request
 	 */
-	public function signRequest(\TYPO3\Flow\Http\Request $request, $identifier, $keyPairFingerprint) {
+	public function signRequest(\TYPO3\Flow\Http\Request $request, $identifier, $publicKeyFingerprint) {
 		$signedRequest = clone $request;
 		$signedRequest->setHeader('Date', gmdate(DATE_RFC2822));
 		$signData = $this->getSignatureContent($signedRequest);
-		$signature = $this->rsaWalletService->sign($signData, $keyPairFingerprint);
+		$signature = $this->rsaWalletService->sign($signData, $publicKeyFingerprint);
 		$signedRequest->setHeader('X-Request-Signature', $identifier . ':' . base64_encode($signature));
 		return $signedRequest;
 	}

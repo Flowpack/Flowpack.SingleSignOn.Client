@@ -18,7 +18,7 @@ class SsoClientTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 */
 	public function decryptCallbackAccessTokenUsesRsaWalletServiceAndClientKeyPair() {
 		$ssoClient = new \Flowpack\SingleSignOn\Client\Domain\Model\SsoClient();
-		$ssoClient->setKeyPairUuid('key-pair-uuid');
+		$ssoClient->setPublicKeyFingerprint('key-pair-uuid');
 
 		$mockRsaWalletService = m::mock('TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface');
 		$this->inject($ssoClient, 'rsaWalletService', $mockRsaWalletService);

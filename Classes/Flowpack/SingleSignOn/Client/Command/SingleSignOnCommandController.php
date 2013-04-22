@@ -37,11 +37,11 @@ class SingleSignOnCommandController extends \TYPO3\Flow\Cli\CommandController {
 	/**
 	 * Export a public key
 	 *
-	 * @param string $keyPairUuid
+	 * @param string $publicKeyFingerprint
 	 * @return void
 	 */
-	public function exportPublicKeyCommand($keyPairUuid) {
-		$publicKey = $this->rsaWalletService->getPublicKey($keyPairUuid);
+	public function exportPublicKeyCommand($publicKeyFingerprint) {
+		$publicKey = $this->rsaWalletService->getPublicKey($publicKeyFingerprint);
 		$this->output($publicKey->getKeyString());
 	}
 
