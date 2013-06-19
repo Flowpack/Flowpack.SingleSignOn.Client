@@ -42,7 +42,7 @@ TYPO3:
     security:
       firewall:
         filters:
-          -
+          ssoClientSignedRequests:
             patternType: 'Flowpack\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern'
             patternValue:
               patterns:
