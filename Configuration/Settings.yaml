@@ -21,6 +21,15 @@ Flowpack:
         #     publicKeyFingerprint: 'bb5abb57faa122cc031e3c904db3d751'
         #     serviceBaseUri: 'http://ssoserver/sso'
 
+      accountMapper:
+        # Map a party type from the server to the instance, more complex scenarios
+        # need a specialized account mapper implementation (see GlobalAccountMapperInterface)
+        #
+        # typeMapping:
+        #   'Vendor\MyServer\Domain\Model\SomeParty': 'Vendor\MyApplication\Domain\Model\OtherParty'
+        #
+        typeMapping: []
+
 # Example configuration for a SSO entry point
 #
 #   TYPO3:
