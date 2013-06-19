@@ -107,6 +107,9 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 			}
 
 			$authenticationData = $ssoServer->redeemAccessToken($ssoClient, $accessToken);
+
+			// TODO Check validity of authentication data (presence of "account" and "sessionId")
+
 			$account = $this->globalAccountMapper->getAccount($ssoClient, $authenticationData['account']);
 
 			$globalSessionId = $authenticationData['sessionId'];
