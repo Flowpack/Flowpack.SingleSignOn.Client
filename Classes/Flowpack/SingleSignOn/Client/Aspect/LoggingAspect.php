@@ -24,9 +24,7 @@ class LoggingAspect {
 	/**
 	 * Log signed request pattern failures
 	 *
-	 * TODO Only log failed request if a debug setting is enabled
-	 *
-	 * @Flow\AfterReturning("method(Flowpack\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern->emitSignatureNotVerified())")
+	 * @Flow\AfterReturning("setting(Flowpack.SingleSignOn.Client.log.logFailedSignedRequests) && method(Flowpack\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern->emitSignatureNotVerified())")
 	 * @param \TYPO3\Flow\Aop\JoinPointInterface $joinPoint The current joinpoint
 	 */
 	public function logSignedRequestPatternFailures(\TYPO3\Flow\Aop\JoinPointInterface $joinPoint) {

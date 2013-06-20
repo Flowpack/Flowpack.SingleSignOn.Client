@@ -30,6 +30,10 @@ Flowpack:
         #
         typeMapping: []
 
+      log:
+        # Enable logging of failed signed requests (signature verification errors)
+        logFailedSignedRequests: FALSE
+
 # Example configuration for a SSO entry point
 #
 #   TYPO3:
