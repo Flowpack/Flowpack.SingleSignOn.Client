@@ -78,6 +78,9 @@ class SimpleGlobalAccountMapper implements GlobalAccountMapperInterface {
 			$partyType = $this->typeMapping[$partyType];
 		}
 		$configuration = new TrustedPropertyMappingConfiguration();
+
+		// TODO Deal with mapping errors from property mapper
+
 		return $this->propertyMapper->convert($source, $partyType, $configuration);
 	}
 

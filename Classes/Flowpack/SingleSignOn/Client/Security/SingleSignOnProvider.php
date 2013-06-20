@@ -41,18 +41,6 @@ class SingleSignOnProvider extends \TYPO3\Flow\Security\Authentication\Provider\
 	protected $session;
 
 	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Log\SecurityLoggerInterface
-	 */
-	protected $securityLogger;
-
-	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\Flow\SignalSlot\Dispatcher
-	 */
-	protected $signalSlotDispatcher;
-
-	/**
 	 * @var string
 	 */
 	protected $globalSessionTouchInterval = 60;

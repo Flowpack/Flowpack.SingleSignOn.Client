@@ -29,12 +29,6 @@ class SingleSignOnToken extends \TYPO3\Flow\Security\Authentication\Token\Abstra
 	protected $callbackUri;
 
 	/**
-	 * @var string
-	 * @Flow\Transient
-	 */
-	protected $serverName;
-
-	/**
 	 * The global session id when authenticated through the SSO server
 	 * @var string
 	 */
