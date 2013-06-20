@@ -30,8 +30,8 @@ class SsoKeyCommandController extends CommandController {
 	 * @return void
 	 */
 	public function generateKeyPairCommand() {
-		$keyUuid = $this->rsaWalletService->generateNewKeypair();
-		$this->outputLine('Created key with uuid: ' . $keyUuid);
+		$publicKeyFingerprint = $this->rsaWalletService->generateNewKeypair();
+		$this->outputLine('Created key with fingerprint: ' . $publicKeyFingerprint);
 	}
 
 	/**
